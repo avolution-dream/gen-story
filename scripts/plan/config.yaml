@@ -1,5 +1,5 @@
 # MODEL ARGS:
-# for model server / sampling args, you can put them under MODEL to be shared, 
+# for model server / sampling args, you can put them under MODEL to be shared,
 # or under the specific pipeline steps (SETTING/ENTITY/etc) for specific options. unspecified sampling args will inherit from the ancestor.
 # the format is the same as the openai API, since VLLM also provides and openai-style API.
 
@@ -8,7 +8,7 @@ defaults:
   output_path: output/plan.json
   logging_level: info # debug, info, warning, error, critical
   MODEL:
-    engine: TODO # TODO path/to/vllm-supported/hf/model, vllm-supported huggingface model string, or openai model string
+    engine: meta-llama/Llama-2-7b-chat-hf # TODO path/to/vllm-supported/hf/model, vllm-supported huggingface model string, or openai model string
     server_type: vllm # "vllm" or "openai"
     host: http://localhost # model server if using vllm
     port: 9741
