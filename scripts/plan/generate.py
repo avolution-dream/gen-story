@@ -86,7 +86,7 @@ if __name__=='__main__':
             success = True
             break
         except:
-            logging.warning(f'Failed to generate entities, retrying ({i+1}/{config['model']['entity']['max_attempts']})')
+            logging.warning(f'Failed to generate entities, retrying ({i+1}/{config["model"]["entity"]["max_attempts"]})')
     if not success:
         raise Exception('Failed to generate entities')
     logging.info(f'Generated entities: {plan.entity_list}')
@@ -103,7 +103,7 @@ if __name__=='__main__':
             success = True
             break
         except:
-            logging.warning(f'Failed to generate outline, retrying ({i+1}/{config['model']['outline']['max_attempts']})')
+            logging.warning(f'Failed to generate outline, retrying ({i+1}/{config["model"]["outline"]["max_attempts"]})')
     if not success:
         raise Exception('Failed to generate outline')
 
