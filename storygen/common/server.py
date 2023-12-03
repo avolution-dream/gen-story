@@ -65,12 +65,12 @@ def start_server(config):
         logging.info(f"Server for {config['engine']} already started.")
         return
     if config['host'] == LOCALHOST and config['server_type'] == 'vllm':
-        logging.info(f"Starting vllm server for {config['engine']} on port {config['port']} with {config['tensor-parallel-size']} GPUs... (it's ready when it says \"Uvicorn running\")")
+        logging.info(f"Starting vllm server for {config['engine']} on port {config['port']} with {config['tensor_parallel_size']} GPUs... (it's ready when it says \"Uvicorn running\")")
         # run vllm openai-interface server
         # try:
         os.system(f"python -u -m vllm.entrypoints.openai.api_server \
                         --model {config['engine']} \
-                        --tensor-parallel-size {config['tensor-parallel-size']} \
+                        --tensor-parallel-size {config['tensor_parallel_size']} \
                         --port {config['port']} &")
         #     logging.info(f"Started vllm server for {config['engine']} on port {config['port']}!")
         # except:
