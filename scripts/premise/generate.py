@@ -21,7 +21,7 @@ def generate_title_user(premise_object, title_str):
 
     title_str: (str) a short title for the story.
     """
-    premise_object.title = title
+    premise_object.title = title_str
     return premise_object
 
 
