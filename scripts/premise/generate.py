@@ -12,7 +12,32 @@ from storygen.premise.premise_writer import *
 from storygen.common.config import Config
 from storygen.common.util import *
 
+# ================================================
+# Helper functions for user generated contents
+# ================================================
+def generate_title_user(premise_object, title_str):
+    """
+    Adding the title attribute to the premise.
 
+    title_str: (str) a short title for the story.
+    """
+    premise_object.title = title
+    return premise_object
+
+
+def generate_premise_user(premise_object, premise_str):
+    """
+    Adding the premise attribute to the premise.
+
+    premise: (str) the premise sentence(s) for the story.
+    """
+    premise_object.title = premise_str
+    return premise_object
+
+
+# ================================================
+# The main function
+# ================================================
 if __name__=='__main__':
 
     # =======================
@@ -21,6 +46,11 @@ if __name__=='__main__':
     # Set the arguments
     parser = argparse.ArgumentParser()
     parser.add_argument('--configs', nargs='+', default=['defaults'])
+    parser.add_argument('-u', '--user_gen', action='store_true',
+                        help='Flag if user provide info by themselves.')
+    parser.add_argument('-t', '--title_str', type=str, default='A Happy Day')
+    parser.add_argument('-p', '--premise_str', type=str, default='',
+                        help='If empty, the model will generate based on the title.')
     args = parser.parse_args()
 
     # Set the path
@@ -41,16 +71,26 @@ if __name__=='__main__':
     premise = Premise()
 
     # Generate title and premise
-    generate_title(premise,
-                   prompts['title'],
-                   config['model']['title'],
-                   llm_client)
+    if args.user_gen:
+        logging.info(f'Using user provided title.')
+        generate_title_user(premise,
+                            args.title_str)
+    else:
+        generate_title(premise,
+                       prompts['title'],
+                       config['model']['title'],
+                       llm_client)
     logging.info(f'Generated title: {premise.title}')
 
-    generate_premise(premise,
-                     prompts['premise'],
-                     config['model']['premise'],
-                     llm_client)
+    if args.user_gen and args.premise_str:
+        logging.info(f'Using user provided premise.')
+        generate_premise_user(premise,
+                              args.premise_str)
+    else:
+        generate_premise(premise,
+                         prompts['premise'],
+                         config['model']['premise'],
+                         llm_client)
     logging.info(f'Generated premise: {premise.premise}')
 
     # Save the results
