@@ -1,0 +1,1 @@
+{"engine": "meta-llama/Llama-2-7b-chat-hf", "host": "http://localhost", "port": 9741, "server_type": "vllm"}

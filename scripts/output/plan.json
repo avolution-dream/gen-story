@@ -1,0 +1,400 @@
+{
+    "premise": {
+        "title": "The Last Leaf's Farewell",
+        "premise": "In a world where nature has taken over the last remaining city, a young girl named Aria finds solace in a mysterious old tree that seems to hold the last remaining Trace of nature's gentle touch. As the tree begins to wither and die, Aria embarks on a journey to save it, discovering the true essence of life and the strength of the human spirit along the way."
+    },
+    "setting": "The story is set in a post-apocalyptic future where nature has reclaimed the ruins of a once-thriving city.",
+    "entities": [
+        {
+            "name": "Aria",
+            "description": "Aria is an adventurous young girl with a penchant for wildflowers who finds solace in the mystical old tree."
+        },
+        {
+            "name": "Techno",
+            "description": "Techno is the manifestation of the city's previous technological advancements, now personified as a grim reaper-like figure who shadows Aria."
+        },
+        {
+            "name": "Dr. Fauna",
+            "description": "Dr. Fauna is an enigmatic scientist who operates a secret lab, studying the old tree and its mysterious power to revive life."
+        },
+        {
+            "name": "Moirae",
+            "description": "Moirae is a trio of fallen nature spirits who take on the forms of doe, buck, and fawn, guiding Aria on her quest to save the old tree."
+        },
+        {
+            "name": "Zephyr",
+            "description": "Zephyr is a gentle gust of wind imbued with life, who becomes Aria's steadfast ally, vital in navigating the abandoned city's treacherous landscape."
+        },
+        {
+            "name": "Erebus",
+            "description": "Erebus is the tempestuous spirit of darkness who seeks to extinguish the last remaining connection to nature."
+        }
+    ],
+    "outline": {
+        "text": "",
+        "scene": "",
+        "entities": [],
+        "children": [
+            {
+                "text": "In a desolate post-apocalyptic world, Aria stumbles upon a magical old tree that may hold the last connection to nature.",
+                "scene": "Battered plaza amidst ruined cityscape.",
+                "entities": [
+                    "Aria",
+                    "Techno"
+                ],
+                "children": [
+                    {
+                        "text": "Aria wanders through a barren wasteland, scavenging for supplies in the ruins of civilization.",
+                        "scene": "Dilapidated streets littered with crumbling buildings.",
+                        "entities": [
+                            "Aria"
+                        ],
+                        "children": [
+                            {
+                                "text": "Aria discovers a hidden cache of wildflower seeds, hinting at the possibility of rebirth in the desolate landscape.",
+                                "scene": "Dilapidated courtyard surrounded by crumbling buildings.",
+                                "entities": [
+                                    "Aria",
+                                    "Dr. Fauna",
+                                    "Moirae"
+                                ],
+                                "children": [],
+                                "id": "4253171d-57d5-4abc-a359-53fecaa8f5aa"
+                            },
+                            {
+                                "text": "Aria stumbles upon a hidden underground spring, providing her with much-needed water and hope for the future.",
+                                "scene": "Dilapidated subway tunnels beneath ruined city.",
+                                "entities": [
+                                    "Aria",
+                                    "Dr. Fauna",
+                                    "Moirae"
+                                ],
+                                "children": [],
+                                "id": "c2bf9832-08fc-4ce0-8615-a384692a07f1"
+                            },
+                            {
+                                "text": "Aria discovers a ruined colony of bees, their hive filled with a rare, life-sustaining pollen.",
+                                "scene": "Abandoned rooftop garden overgrown with wildflowers.",
+                                "entities": [
+                                    "Aria",
+                                    "Dr. Fauna",
+                                    "Moirae"
+                                ],
+                                "children": [],
+                                "id": "ceaade62-bd62-444a-a995-4e4cd814ccc0"
+                            }
+                        ],
+                        "id": "7127d22e-9dbd-4c88-9727-0236198ebc79"
+                    },
+                    {
+                        "text": "Aria chances upon a hidden underground oasis teeming with life, momentarily escaping the desolate landscape above.",
+                        "scene": "A secret underground cave system teeming with lush vegetation.",
+                        "entities": [
+                            "Aria",
+                            "Moirae",
+                            "Dr. Fauna"
+                        ],
+                        "children": [
+                            {
+                                "text": "Aria stumbles upon a hidden underground river, its crystal-clear waters refracting the flickering light of her flashlight.",
+                                "scene": "Abandoned limestone cave system.",
+                                "entities": [
+                                    "Aria",
+                                    "Dr. Fauna",
+                                    "Moirae"
+                                ],
+                                "children": [],
+                                "id": "fc07be05-fed2-4ccb-ba65-67aa8ead806a"
+                            },
+                            {
+                                "text": "Aria discovers a lush, vibrant grove of ancient trees, their boughs heavy with fruit. She can hear the distant chirping of birds and the rustling of small creatures in the underbrush. The air is thick with life-giving oxygen and warm, humid scents that fill her senses.",
+                                "scene": "Remainder of ancient forest, hidden away.",
+                                "entities": [
+                                    "Aria",
+                                    "Dr. Fauna",
+                                    "Moirae"
+                                ],
+                                "children": [],
+                                "id": "8a64c1df-55ab-4d48-b5bb-24bae3b05078"
+                            }
+                        ],
+                        "id": "545d4af1-b933-42ab-becf-1cb4f3dd67ac"
+                    }
+                ],
+                "id": "c938f20b-90a5-4e76-ac24-ef6b05ccd60a"
+            },
+            {
+                "text": "As Aria discovers the tree's power to revive life, Techno taunts her with visions of the city's once greatness.",
+                "scene": "Abandoned city park overgrown with wildflowers.",
+                "entities": [
+                    "Aria",
+                    "Techno",
+                    "Dr. Fauna"
+                ],
+                "children": [
+                    {
+                        "text": "Aria discovers a hidden chamber beneath the tree, filled with ancient artifacts and mysterious symbols.",
+                        "scene": "A hidden grotto beneath the old tree's sprawling roots",
+                        "entities": [
+                            "Aria",
+                            "Moirae",
+                            "Dr. Fauna"
+                        ],
+                        "children": [
+                            {
+                                "text": "Aria's hand brushes against a strange symbols etched into the chamber wall, feeling a faint warmth emanating from it.",
+                                "scene": "In a hidden grotto beneath the old tree's sprawling roots.",
+                                "entities": [
+                                    "Aria",
+                                    "Moirae",
+                                    "Dr. Fauna"
+                                ],
+                                "children": [],
+                                "id": "4050cefe-7313-4c3c-b3f2-a8874c31fd1e"
+                            },
+                            {
+                                "text": "Aria uncovers a strange, glowing artifact buried within the chamber's walls, pulsing with an otherworldly energy.",
+                                "scene": "Ancient chamber deep within the old tree's roots.",
+                                "entities": [
+                                    "Aria",
+                                    "Moirae",
+                                    "Dr. Fauna"
+                                ],
+                                "children": [],
+                                "id": "a9580e16-8738-4348-8e49-49afecb4eaae"
+                            }
+                        ],
+                        "id": "cdb27f86-68f4-452c-8b1d-450d079cd001"
+                    },
+                    {
+                        "text": "Aria uncovers a series of cryptic letters etched into the chamber's walls, hinting at a long-lost technology capable of reviving the city.",
+                        "scene": "A crumbling underground laboratory filled with ancient artifacts.",
+                        "entities": [
+                            "Aria",
+                            "Techno",
+                            "Dr. Fauna"
+                        ],
+                        "children": [
+                            {
+                                "text": "Aria discovers a hidden panel beneath the chamber wall, revealing a series of cryptic letters etched with a glowing, ancient ink.",
+                                "scene": "Dilapidated basement of forgotten library.",
+                                "entities": [
+                                    "Aria",
+                                    "Dr. Fauna",
+                                    "Moirae"
+                                ],
+                                "children": [],
+                                "id": "8eeae409-a920-4771-a59c-f2b34aef1072"
+                            },
+                            {
+                                "text": "Aria deciphers the cryptic letters, revealing a long-lost technology capable of restoring the city's ecosystem.",
+                                "scene": "Dilapidated basement of forgotten library.",
+                                "entities": [
+                                    "Aria",
+                                    "Techno",
+                                    "Dr. Fauna"
+                                ],
+                                "children": [],
+                                "id": "16de31d9-4f3a-4e80-aea4-2d5ff6873623"
+                            },
+                            {
+                                "text": "Aria uncovers a hidden control panel in the chamber, revealing a series of ancient buttons and levers that glow with an otherworldly energy.",
+                                "scene": "Ancient control room hidden deep within the old tree's heart.",
+                                "entities": [
+                                    "Aria",
+                                    "Techno",
+                                    "Dr. Fauna"
+                                ],
+                                "children": [],
+                                "id": "4b1eed27-d847-412d-976a-2b727159f771"
+                            },
+                            {
+                                "text": "Aria discovers a hidden note tucked away within the control panel, providing a cryptic set of instructions for the long-lost technology.",
+                                "scene": "A secret compartment hidden within the old tree's bark.",
+                                "entities": [
+                                    "Aria",
+                                    "Techno",
+                                    "Dr. Fauna"
+                                ],
+                                "children": [],
+                                "id": "bbe56d0c-ef04-4570-9ebe-66ed45c7cd15"
+                            }
+                        ],
+                        "id": "1623b2d5-c997-412b-ab8e-3b59f0904b1c"
+                    }
+                ],
+                "id": "9a210ba4-4799-4d10-b24d-6adec8ced737"
+            },
+            {
+                "text": "Enlisting the help of trio Moirae and gust of wind Zephyr, Aria embarks on a perilous quest to nurse the tree back to health.",
+                "scene": "Deep within the overgrown ruins of a once-great library.",
+                "entities": [
+                    "Aria",
+                    "Moirae",
+                    "Zephyr"
+                ],
+                "children": [
+                    {
+                        "text": "Aria discovers a forgotten, mystical garden hidden within the ruins, teeming with life.",
+                        "scene": "A hidden courtyard filled with ancient trees and misty fountains.",
+                        "entities": [
+                            "Aria",
+                            "Moirae",
+                            "Zephyr"
+                        ],
+                        "children": [
+                            {
+                                "text": "Aria chances upon a glimmer of light shimmering through the ruins' twilight, leading to the forgotten garden's entrance.",
+                                "scene": "A hidden courtyard filled with ancient trees and misty fountains",
+                                "entities": [
+                                    "Aria",
+                                    "Moirae",
+                                    "Zephyr"
+                                ],
+                                "children": [],
+                                "id": "8645961b-19c4-456d-b33a-a9f5d9a90cb2"
+                            },
+                            {
+                                "text": "Aria stumbles upon an ancient, glowing artifact buried beneath the garden's roots, emitting a powerful, pulsating light.",
+                                "scene": "A sunken, crystal-lit chamber beneath ancient tree roots.",
+                                "entities": [
+                                    "Aria",
+                                    "Dr. Fauna",
+                                    "Moirae"
+                                ],
+                                "children": [],
+                                "id": "8e2d16be-6e34-4431-bd20-5ba44375a83f"
+                            }
+                        ],
+                        "id": "cc837fe9-161e-4177-97a1-175b489d0801"
+                    },
+                    {
+                        "text": "Aria discovers a hidden underground water source, secretly tended to by the forgotten garden's guardian, a mysterious old man with ancient wisdom.",
+                        "scene": "Deep beneath a forgotten rose garden's twilight",
+                        "entities": [
+                            "Aria",
+                            "Moirae",
+                            "Zephyr"
+                        ],
+                        "children": [
+                            {
+                                "text": "Aria discovers a secret underground spring, refreshing and invigorating her as she continues her quest.",
+                                "scene": "Deep beneath a hidden cavern inside the old tree's sprawling roots.",
+                                "entities": [
+                                    "Aria",
+                                    "Moirae",
+                                    "Zephyr"
+                                ],
+                                "children": [],
+                                "id": "341d7a8c-a4bd-4e49-ad31-600dc958129d"
+                            },
+                            {
+                                "text": "Aria meets the mysterious old man, who shares an ancient legend about the tree's power and the city's forgotten past.",
+                                "scene": "A secluded grove hidden deep within the old tree's roots.",
+                                "entities": [
+                                    "Aria",
+                                    "Dr. Fauna"
+                                ],
+                                "children": [],
+                                "id": "d178dbae-73e6-4cda-90b4-2fef6ac1a9c5"
+                            }
+                        ],
+                        "id": "48990ffb-2d56-40c9-aa6f-2c8fc6c1b0dd"
+                    }
+                ],
+                "id": "15f7bbe4-d9ae-4f97-bcab-711d8b91973e"
+            },
+            {
+                "text": "As Aria confronts the malevolent spirit Erebus and the city's dark past, the fate of the old tree and the world's last remaining nature hangs in the balance.",
+                "scene": "Abandoned palace's haunted wing, shrouded in mysterious shadows.",
+                "entities": [
+                    "Aria",
+                    "Erebus"
+                ],
+                "children": [
+                    {
+                        "text": "Aria uncovers a hidden entrance to an underground laboratory, where Dr. Fauna reveals the city's dark history of exploiting nature's power.",
+                        "scene": "Cobweb-covered tunnels beneath abandoned research facility.",
+                        "entities": [
+                            "Aria",
+                            "Dr. Fauna",
+                            "Moirae",
+                            "Zephyr"
+                        ],
+                        "children": [
+                            {
+                                "text": "Aria discovers a secret panel hidden behind a bookshelf, revealing a narrow tunnel leading deeper into the laboratory.",
+                                "scene": "Ancient library's dusty secret room.",
+                                "entities": [
+                                    "Aria",
+                                    "Dr. Fauna",
+                                    "Moirae"
+                                ],
+                                "children": [],
+                                "id": "78209925-f95c-4834-a2b1-3219908b7109"
+                            },
+                            {
+                                "text": "Aria discovers a hidden journal belonging to Dr. Fauna, detailing the city's descent into darkness and the tragic fate of the forgotten garden's guardian.",
+                                "scene": "Dusty attic of Dr. Fauna's abandoned laboratory.",
+                                "entities": [
+                                    "Aria",
+                                    "Dr. Fauna",
+                                    "Moirae"
+                                ],
+                                "children": [],
+                                "id": "73d9c836-493a-48db-9d9d-63d106d3fd3c"
+                            }
+                        ],
+                        "id": "69faf3f3-faed-405f-9a61-7af10c7a0527"
+                    },
+                    {
+                        "text": "Aria uncovers a hidden artifact deep within the laboratory's subbasement, capable of defeating Erebus and revitalizing the old tree.",
+                        "scene": "Dank, dimly lit chamber beneath forgotten laboratory.",
+                        "entities": [
+                            "Aria",
+                            "Erebus",
+                            "Dr. Fauna"
+                        ],
+                        "children": [
+                            {
+                                "text": "Aria discovers a glowing, crystal-like artifact buried within the subbasement's darkest depths.",
+                                "scene": "A hidden chamber beneath ancient city's buried heart.",
+                                "entities": [
+                                    "Aria",
+                                    "Erebus",
+                                    "Dr. Fauna"
+                                ],
+                                "children": [],
+                                "id": "5ba09568-63d1-4021-886c-8381288dc537"
+                            },
+                            {
+                                "text": "Aria successfully channels the artifact's energy, defeating Erebus and restoring the old tree's vitality.",
+                                "scene": "Atop ancient watchtower overlooking ruined city",
+                                "entities": [
+                                    "Aria",
+                                    "Erebus",
+                                    "Dr. Fauna"
+                                ],
+                                "children": [],
+                                "id": "62b5269d-5f9a-4a15-aa1e-23cfdb977acd"
+                            },
+                            {
+                                "text": "Aria's triumphant smile falters as Techno emerges from the shadows, its malevolent presence a grim reminder that darkness still lurks within the city's heart.",
+                                "scene": "Anguished skyline, towering monoliths looming overhead.",
+                                "entities": [
+                                    "Aria",
+                                    "Techno"
+                                ],
+                                "children": [],
+                                "id": "4005dcc6-bef6-4830-babf-76864ad0022f"
+                            }
+                        ],
+                        "id": "f5ee5709-62e4-4c82-8a8e-b419fac99800"
+                    }
+                ],
+                "id": "ae13dffa-dd66-44db-a109-577ba79ba98a"
+            }
+        ],
+        "id": "471dc544-6885-4643-8a4f-0727142d1b37"
+    }
+}
