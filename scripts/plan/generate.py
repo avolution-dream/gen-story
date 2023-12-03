@@ -12,6 +12,7 @@ from storygen.plan.plan import Plan
 from storygen.plan.plan_writer import *
 from storygen.common.config import Config
 from storygen.common.util import *
+from storygen.plan.setting import Setting
 
 # ================================================
 # Helper functions for user generated contents
@@ -22,8 +23,8 @@ def generate_setting_user(plan_object, setting_str):
 
     setting_str: (str) a setting for the story.
     """
-    plan_object.setting = setting_str
-    logging.debug(f'Setting: {plan.setting}')
+    plan_object.setting = Setting(setting_str)
+    logging.debug(f'Setting: {plan.setting.setting}')
     return plan_object
 
 
