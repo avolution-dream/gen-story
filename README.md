@@ -96,13 +96,12 @@ Note that `start_servers.py` relies on `close_servers.py` to delete the `server_
 
 
 ## License
-
-This repo is licensed under the Apache 2.0 License. See the LICENSE file for details.
-
+This repo is licensed under the Apache 2.0 License.
 
 ## TODO
-- Adding text-to-image prompt in each generated plots
-- Intead of automating the whole process, allow user to
+- [x] Intead of automating the whole process, allow user to:
+    - Provide title
     - Provide premise
-    - Provide characters
-- Add the gradio interface for this one
+    - Provide characters and their descriptions
+- [ ] Adding text-to-image prompt in each generated plots
+- [ ] Add the gradio interface for this one
