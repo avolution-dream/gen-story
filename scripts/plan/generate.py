@@ -18,7 +18,7 @@ from storygen.common.util import *
 # ================================================
 def generate_setting_user(plan_object, setting_str):
     """
-    Adding the title attribute to the premise.
+    Adding the setting attribute to the premise.
 
     setting_str: (str) a setting for the story.
     """
@@ -65,7 +65,7 @@ if __name__=='__main__':
     # 1. Generate the setting
     if args.user_gen and args.setting_str:
         logging.info(f'Using user provided setting {args.setting_str}.')
-        generate_setting_user(premise,
+        generate_setting_user(plan,
                               args.setting_str)
     else:
         generate_setting(plan,
