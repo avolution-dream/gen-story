@@ -14,7 +14,7 @@ class ServerConfig:
         self.host = host
         self.port = port
         self.server_type = server_type
-    
+
     @staticmethod
     def from_config(config):
         return ServerConfig(
@@ -23,7 +23,7 @@ class ServerConfig:
             port=config.get('port', DEFAULT_PORT),
             server_type=config['server_type']
         )
-    
+
     @staticmethod
     def from_json(json_str):
         return ServerConfig(**json.loads(json_str))
@@ -38,7 +38,7 @@ class ServerConfig:
 
     def __getitem__(self, key):
         return getattr(self, key)
-    
+
     def __hash__(self):
         return hash((self.engine, self.host, self.port, self.server_type))
 
@@ -61,11 +61,12 @@ def start_server(config):
         logging.info(f"Server for {config['engine']} already started.")
         return
     if config['host'] == LOCALHOST and config['server_type'] == 'vllm':
-        logging.info(f"Starting vllm server for {config['engine']} on port {config['port']}... (it's ready when it says \"Uvicorn running\")")
+        logging.info(f"Starting vllm server for {config['engine']} on port {config['port']} with {config['tensor-parallel-size']} GPUs... (it's ready when it says \"Uvicorn running\")")
         # run vllm openai-interface server
         # try:
         os.system(f"python -u -m vllm.entrypoints.openai.api_server \
                         --model {config['engine']} \
+                        --tensor-parallel-size {config['tensor-parallel-size']} \
                         --port {config['port']} &")
         #     logging.info(f"Started vllm server for {config['engine']} on port {config['port']}!")
         # except:
