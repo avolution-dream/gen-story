@@ -13,10 +13,13 @@ from storygen.common.llm.prompt import load_prompts
 
 
 def recursive_start_servers(config, prompts, started_server_configs):
+
     server_config = ServerConfig.from_config(config)
+
     if server_config not in started_server_configs:
         start_server(server_config)
         started_server_configs.add(server_config)
+        
     for key in prompts:
         if type(prompts[key]) is dict:
             if key in config and type(config[key]) is Config:

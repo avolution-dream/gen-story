@@ -64,7 +64,7 @@ class Filter:
     @staticmethod
     def wrap_preprocessor(preprocessor, filter):
         return Filter(lambda s: filter(preprocessor(s)))
-    
+
     def __call__(self, *args, **kwargs):
         try:
             return self.filter_func(*args, **kwargs)
@@ -108,7 +108,10 @@ def wrap_filter_for_tuple(filter, index=0):
     return Filter(lambda s: filter(s[index]))
 
 
-def extract_choice_logprobs(full_completion, choices=['yes', 'no'], default_logprobs=[-1e8, -1e8], case_sensitive=False):
+def extract_choice_logprobs(full_completion,
+                            choices=['yes', 'no'],
+                            default_logprobs=[-1e8, -1e8],
+                            case_sensitive=False):
     batch_logprobs = []
     for choice in full_completion['choices']:
         all_logprobs = choice['logprobs']['top_logprobs']

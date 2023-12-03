@@ -11,7 +11,7 @@ pip install -r requirements.txt
 pip install -e .
 ```
 
-By default we use VLLM to serve models. 
+By default we use VLLM to serve models.
 You'll need to make a one-line change to the VLLM package to get their API server to work with logprobs requests that are used for reranking.
 In your install of VLLM (you can find it using e.g., `pip show vllm`), find the line at https://github.com/vllm-project/vllm/blob/acbed3ef40f015fcf64460e629813922fab90380/vllm/entrypoints/openai/api_server.py#L177 (your exact line number might vary slightly depending on VLLM version) and change the `p` at the end to e.g., `max(p, -1e8)`. This will avoid an error related to passing jsons back from the server, due to json not handling inf values.
 
@@ -27,7 +27,7 @@ Everything will read the information from the `defaults` configuration in `confi
 
 See the corresponding `config.yaml` for details on options for each step of the pipeline. You'll have to fill in the particular model you want to use (marked TODO in each `config.yaml`). This system was mainly tested with LLaMA2-7B-Chat and ChatGPT, with the default options given; several other options are supported but not as heavily tested. When changing the model, make sure you also change `server_type` and `prompt_format` as needed. You can also add new options directly to the config as needed; you can also see the main prompts in `prompts.json`.
 
-By default we use VLLM to serve models. Start the server(s) for the models you're using (this will start them in the background). 
+By default we use VLLM to serve models. Start the server(s) for the models you're using (this will start them in the background).
 
 ```
 python start_servers.py --step {premise/plan/story}
@@ -41,7 +41,7 @@ python {premise/plan/story}/generate.py
 
 By default, files are written to the `output/` folder. Premise and Plan are formatted as jsons which can be edited for human interaction.
 
-After you're done with a given step, close your servers (this command also runs in the background). 
+After you're done with a given step, close your servers (this command also runs in the background).
 
 ```
 python close_servers.py
@@ -65,10 +65,10 @@ We performed human evaluation on 7000 generated story plot pairs, which can be f
 
 For Q2, they were required to provide a short text description for Q1. For other questions, they chose from four given options: *Plot A, Plot B, Both are good, Both are bad*. The description of the latter two options differ in different questions. We list some statistics below:
 
-* 6931 uniq Premise, 60.6 average words 
+* 6931 uniq Premise, 60.6 average words
 * 403 uniq Annotator, 8 median annotations    
-* 7000 uniq plan pair, 619.5 average words 
-* 6993 uniq response to Q2, 69.0 average words 
+* 7000 uniq plan pair, 619.5 average words
+* 6993 uniq response to Q2, 69.0 average words
 
 And here are the results of our human evaluation.
 |                                                                                    | Plot A | Plot B | Both are good | Both are bad |
@@ -81,7 +81,7 @@ And here are the results of our human evaluation.
 
 ## Some Known Issues / Potential Improvements
 
-- When start multiple model servers for different models, we should allocate them to different GPUs or load on multi-GPU as needed. 
+- When start multiple model servers for different models, we should allocate them to different GPUs or load on multi-GPU as needed.
 - During plan generation, the model likes to overgenerate characters when determining which characters appear in a given plot point.
 - Diversity of premise / plan ideas is kind of bad when using chat models, since they like to generate the same ideas over and over. Can try to increase temperature, or other ways to increase diversity, ideally without sacrificing quality.
 - We should implement vaguest-first expansion (using a model to predict which node is the most vague) rather than breadth-first expansion when creating the outline during plan generation.
@@ -92,3 +92,10 @@ And here are the results of our human evaluation.
 ## License
 
 This repo is licensed under the Apache 2.0 License. See the LICENSE file for details.
+
+
+## TODO
+- Adding text-to-image prompt in each generated plots
+- Intead of automating the whole process, allow user to
+    - Provide premise
+    - Provide characters
