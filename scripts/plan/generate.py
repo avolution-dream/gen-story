@@ -64,7 +64,7 @@ if __name__=='__main__':
 
     # 1. Generate the setting
     if args.user_gen and args.setting_str:
-        logging.info(f'Using user provided setting.')
+        logging.info(f'Using user provided setting {args.setting_str}.')
         generate_setting_user(premise,
                               args.setting_str)
     else:
