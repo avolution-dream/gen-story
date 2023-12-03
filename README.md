@@ -48,19 +48,26 @@ This part is to generate the title and a premise for the given title. If you wou
 python premise/generate.py
 ```
 
-You may specify the titles and premise string by yourself with the following command:
+You may specify the title and premise string by yourself with the following command:
 ```bash
 python premise/generate.py --user_gen \
-    --title_str 'A Happy Day'
+    --title_str 'A Happy Day' \
     --premise_str 'A pleasure-seeking, work-eschewing twenty-something realizes he has worked no days during the first few months of the pandemic despite loving his employment after receiving pandemic package payment fortnightly.'
 ```
 
 By default, files are written to the `./script/output/` folder. Premise and Plan are formatted as jsons which can be edited for human interaction.
 
 ### Get the Plan and Storyboard
+If you would like the model to take over the job:
 ```bash
 python plan/generate.py
 ```
+You may specify the settingby yourself:
+```bash
+python plan/generate.py --user_gen \
+    --setting_str 'The story is set in 80s China where everyone has a hope.' \
+```
+
 TODO.
 
 ### Close the Server

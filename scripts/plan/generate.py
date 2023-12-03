@@ -13,7 +13,23 @@ from storygen.plan.plan_writer import *
 from storygen.common.config import Config
 from storygen.common.util import *
 
+# ================================================
+# Helper functions for user generated contents
+# ================================================
+def generate_setting_user(plan_object, setting_str):
+    """
+    Adding the title attribute to the premise.
 
+    setting_str: (str) a setting for the story.
+    """
+    plan_object.setting = setting_str
+    logging.debug(f'Setting: {plan.setting.setting}')
+    return plan_object
+
+
+# ================================================
+# The main function
+# ================================================
 if __name__=='__main__':
 
     # =======================
@@ -22,6 +38,10 @@ if __name__=='__main__':
     # Set the arguments
     parser = argparse.ArgumentParser()
     parser.add_argument('--configs', nargs='+', default=['defaults'])
+    parser.add_argument('-u', '--user_gen', action='store_true',
+                        help='Flag if user provide info by themselves.')
+    parser.add_argument('-s', '--setting_str', type=str,
+                        default='The story is set in 80s China where everyone has a hope.')
     args = parser.parse_args()
 
     # Set the path
@@ -43,10 +63,15 @@ if __name__=='__main__':
     plan = Plan(premise)
 
     # 1. Generate the setting
-    generate_setting(plan,
-                     client,
-                     prompts['setting'],
-                     config['model']['setting'])
+    if args.user_gen and args.setting_str:
+        logging.info(f'Using user provided setting.')
+        generate_title_user(premise,
+                            args.setting_str)
+    else:
+        generate_setting(plan,
+                         client,
+                         prompts['setting'],
+                         config['model']['setting'])
 
     logging.info(f'Generated setting: {plan.setting}')
 
@@ -61,7 +86,7 @@ if __name__=='__main__':
             success = True
             break
         except:
-            logging.warning(f'Failed to generate entities, retrying ({i+1}/{config["model"]["entity"]["max_attempts"]})')
+            logging.warning(f'Failed to generate entities, retrying ({i+1}/{config['model']['entity']['max_attempts']})')
     if not success:
         raise Exception('Failed to generate entities')
     logging.info(f'Generated entities: {plan.entity_list}')
@@ -78,7 +103,7 @@ if __name__=='__main__':
             success = True
             break
         except:
-            logging.warning(f'Failed to generate outline, retrying ({i+1}/{config["model"]["outline"]["max_attempts"]})')
+            logging.warning(f'Failed to generate outline, retrying ({i+1}/{config['model']['outline']['max_attempts']})')
     if not success:
         raise Exception('Failed to generate outline')
 

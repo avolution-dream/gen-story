@@ -12,6 +12,7 @@ from storygen.premise.premise_writer import *
 from storygen.common.config import Config
 from storygen.common.util import *
 
+
 # ================================================
 # Helper functions for user generated contents
 # ================================================
@@ -71,7 +72,7 @@ if __name__=='__main__':
     premise = Premise()
 
     # Generate title and premise
-    if args.user_gen:
+    if args.user_gen and args.title_str:
         logging.info(f'Using user provided title.')
         generate_title_user(premise,
                             args.title_str)
