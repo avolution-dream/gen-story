@@ -23,7 +23,7 @@ class ServerConfig:
             host=config['host'],
             port=config.get('port', DEFAULT_PORT),
             server_type=config['server_type'],
-            tensor_parallel_size=config['tensor-parallel-size']
+            tensor_parallel_size=config['tensor_parallel_size']
         )
 
     @staticmethod
@@ -36,7 +36,7 @@ class ServerConfig:
             'host': self.host,
             'port': self.port,
             'server_type': self.server_type,
-            'tensor-parallel-size': self.tensor_parallel_size
+            'tensor_parallel_size': self.tensor_parallel_size
         })
 
     def __getitem__(self, key):

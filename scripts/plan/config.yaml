@@ -9,7 +9,7 @@ defaults:
   logging_level: info # debug, info, warning, error, critical
   MODEL:
     engine: meta-llama/Llama-2-7b-chat-hf # TODO path/to/vllm-supported/hf/model, vllm-supported huggingface model string, or openai model string
-    tensor-parallel-size: 4 # TODO
+    tensor_parallel_size: 4 # TODO
     server_type: vllm # "vllm" or "openai"
     host: http://localhost # model server if using vllm
     port: 9741

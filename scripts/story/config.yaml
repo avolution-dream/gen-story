@@ -15,7 +15,7 @@ defaults:
     server_type: vllm # "vllm" or "openai"
     host: http://localhost # model server if using vllm
     port: 9741
-    tensor-parallel-size: 4 # TODO
+    tensor_parallel_size: 4 # TODO
     prompt_format: llama2-chat # "none" (pretrained base model), "openai-chat", or "llama2-chat"; add other options in llm.py as needed
     # for the remaining args below, you can put these args here to be shared, or put specific ones under "title" and "premise" if you want different args
     temperature: 1
