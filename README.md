@@ -57,8 +57,6 @@ python premise/generate.py --user_gen \
 
 By default, files are written to the `./script/output/` folder. Premise and Plan are formatted as jsons which can be edited for human interaction.
 
-After you're done with a given step, close your servers (this command also runs in the background).
-
 ### Get the Plan and Storyboard
 ```bash
 python plan/generate.py
@@ -66,6 +64,8 @@ python plan/generate.py
 TODO.
 
 ### Close the Server
+After you're done with the above, close your servers (this command also runs in the background).
+
 ```bash
 python close_servers.py
 ```
@@ -92,3 +92,4 @@ This repo is licensed under the Apache 2.0 License. See the LICENSE file for det
 - Intead of automating the whole process, allow user to
     - Provide premise
     - Provide characters
+- Add the gradio interface for this one
