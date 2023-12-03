@@ -9,11 +9,12 @@ DEFAULT_PORT = 8000
 
 
 class ServerConfig:
-    def __init__(self, engine, host, port, server_type):
+    def __init__(self, engine, host, port, server_type, tensor_parallel_size):
         self.engine = engine
         self.host = host
         self.port = port
         self.server_type = server_type
+        self.tensor_parallel_size = tensor_parallel_size
 
     @staticmethod
     def from_config(config):
@@ -21,7 +22,8 @@ class ServerConfig:
             engine=config['engine'],
             host=config['host'],
             port=config.get('port', DEFAULT_PORT),
-            server_type=config['server_type']
+            server_type=config['server_type'],
+            tensor_parallel_size=config['tensor-parallel-size']
         )
 
     @staticmethod
@@ -33,17 +35,19 @@ class ServerConfig:
             'engine': self.engine,
             'host': self.host,
             'port': self.port,
-            'server_type': self.server_type
+            'server_type': self.server_type,
+            'tensor-parallel-size': self.tensor_parallel_size
         })
 
     def __getitem__(self, key):
         return getattr(self, key)
 
     def __hash__(self):
-        return hash((self.engine, self.host, self.port, self.server_type))
+        return hash((self.engine, self.host, self.port,
+                     self.server_type, self.tensor_parallel_size))
 
     def __eq__(self, other):
-        return (self.engine, self.host, self.port, self.server_type) == (other.engine, other.host, other.port, other.server_type)
+        return (self.engine, self.host, self.port, self.server_type, self.tensor_parallel_size) == (other.engine, other.host, other.port, other.server_type, self.tensor_parallel_size)
 
 
 def start_server(config):
