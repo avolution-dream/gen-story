@@ -23,7 +23,7 @@ def generate_setting_user(plan_object, setting_str):
     setting_str: (str) a setting for the story.
     """
     plan_object.setting = setting_str
-    logging.debug(f'Setting: {plan.setting.setting}')
+    logging.debug(f'Setting: {plan.setting}')
     return plan_object
 
 
