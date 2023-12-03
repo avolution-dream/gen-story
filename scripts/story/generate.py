@@ -14,30 +14,43 @@ from storygen.common.config import Config
 from storygen.common.util import *
 
 if __name__=='__main__':
+
+    # =======================
+    # Preparation
+    # =======================
+    # Set the arguments
     parser = argparse.ArgumentParser()
     parser.add_argument('--configs', nargs='+', default=['defaults'])
     args = parser.parse_args()
 
+    # Set the path
     dir_path = os.path.dirname(os.path.realpath(__file__))
     config = Config.load(Path(dir_path), args.configs)
     init_logging(config['logging_level'])
 
+    # Load the prompts and the plan
     plan = Plan.load(config['plan_path'])
     prompts = load_prompts(Path(dir_path))
 
+    # Set the LLM Client
     client = LLMClient()
-    
+
+    # =======================
+    # Get story
+    # =======================
+    # Generate the story
     story = generate_story(
-        plan, 
-        config['model']['story'], 
-        prompts['story'], 
-        client, 
+        plan,
+        config['model']['story'],
+        prompts['story'],
+        client,
         intermediate_save_prefix=config['intermediate_prefix'],
         delete_old_intermediates=config['delete_old_intermediates'],
     )[0]
 
     logging.info(f'Generated story: {story}')
 
+    # Save the story
     os.makedirs(os.path.dirname(config['output_path']), exist_ok=True)
     story.save(config['output_path'])
 
