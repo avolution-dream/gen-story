@@ -62,10 +62,16 @@ If you would like the model to take over the job:
 ```bash
 python plan/generate.py
 ```
-You may specify the settingby yourself:
+You may specify the setting by yourself:
 ```bash
 python plan/generate.py --user_gen \
     --setting_str 'The story is set in 80s China where everyone has a hope.' \
+    -char_name 'Huo' \
+    -char_desc 'Huo is a worker.' \
+    -char_name 'Boss Zhang' \
+    -char_desc "Boss Zhang is the all-too-serious boss of Huo's office job. He's always yelling at Huo, whose work ethic he disapproves of." \
+    -char_name 'Liang' \
+    -char_desc "Liang is Huo's friendly colleague at the office job."
 ```
 
 TODO.

@@ -13,18 +13,49 @@ from storygen.plan.plan_writer import *
 from storygen.common.config import Config
 from storygen.common.util import *
 from storygen.plan.setting import Setting
+from storygen.plan.entity import *
 
 # ================================================
 # Helper functions for user generated contents
 # ================================================
 def generate_setting_user(plan_object, setting_str):
     """
-    Adding the setting attribute to the premise.
+    Adding the setting attribute to the plan object.
 
     setting_str: (str) a setting for the story.
     """
     plan_object.setting = Setting(setting_str)
     logging.debug(f'Setting: {plan.setting.setting}')
+    return plan_object
+
+
+def generate_entity_user(plan_object,
+                         entity_name_list,
+                         entity_description_list):
+    """
+    Set the entity_list for the plan object.
+
+    entity_name_list: (list) a list of entity names.
+    entity_description_list: (list) a list of entity descriptions.
+    """
+
+    # Make the assertion
+    assert (
+        len(entity_name_list) == len(entity_description_list)
+    ), 'Entity lists are not of equal length.'
+
+    # Initialize the entity list
+    plan_object.entity_list = EntityList()
+
+    # Make the entity
+    for name, desc in zip(entity_name_list, entity_description_list):
+        # Preprocess for strings
+        name = name.strip(string.whitespace + string.punctuation)
+        desc = desc.rstrip()
+
+        # Add the attribute
+        plan_object.entity_list.entities.append(Entity(name, desc))
+
     return plan_object
 
 
@@ -43,6 +74,10 @@ if __name__=='__main__':
                         help='Flag if user provide info by themselves.')
     parser.add_argument('-s', '--setting_str', type=str,
                         default='The story is set in 80s China where everyone has a hope.')
+    parser.add_argument('-char_name', '--entity_name_list', action='append',
+                        help='Add one entity name.')
+    parser.add_argument('-char_desc', '--entity_description_list', action='append',
+                        help='Add one entity description.')
     args = parser.parse_args()
 
     # Set the path
@@ -77,19 +112,25 @@ if __name__=='__main__':
     logging.info(f'Generated setting: {plan.setting}')
 
     # 2. Generate the entities
-    success = False
-    for i in range(config['model']['entity']['max_attempts']):
-        try:
-            generate_entities(plan,
-                              client,
-                              prompts['entity'],
-                              config['model']['entity'])
-            success = True
-            break
-        except:
-            logging.warning(f'Failed to generate entities, retrying ({i+1}/{config["model"]["entity"]["max_attempts"]})')
-    if not success:
-        raise Exception('Failed to generate entities')
+    if args.user_gen and args.entity_name_list:
+        logging.info(f'Using user provided entities.')
+        generate_entity_user(plan,
+                             args.entity_name_list,
+                             args.entity_description_list)
+    else:
+        success = False
+        for i in range(config['model']['entity']['max_attempts']):
+            try:
+                generate_entities(plan,
+                                  client,
+                                  prompts['entity'],
+                                  config['model']['entity'])
+                success = True
+                break
+            except:
+                logging.warning(f'Failed to generate entities, retrying ({i+1}/{config["model"]["entity"]["max_attempts"]})')
+        if not success:
+            raise Exception('Failed to generate entities')
     logging.info(f'Generated entities: {plan.entity_list}')
 
     # 3. Generate the outlines

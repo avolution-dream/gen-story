@@ -9,6 +9,10 @@ from storygen.plan.outline import *
 
 
 def generate_setting(plan, llm_client, setting_prompt, setting_config):
+    """
+    Instantiate the setting attribute for the plan object.
+    Notice there is a setting wrapper outside.
+    """
     plan.setting = Setting(llm_client.call_with_retry(
         setting_prompt.format(title=plan.premise.title, premise=plan.premise.premise),
         SamplingConfig.from_config(setting_config),
@@ -19,8 +23,13 @@ def generate_setting(plan, llm_client, setting_prompt, setting_config):
 
 
 def generate_entities(plan, llm_client, entity_prompt, entity_config):
+    """
+    Instantiate the entity attribute for the plan object.
+    """
+    # Preprocess for name and description strings
     def postprocess_name(names, **kwargs):
         return [name.strip(string.whitespace + string.punctuation) for name in names]
+
     def postprocess_entity_description(descriptions, **kwargs):
         responses = []
         for description in descriptions:
@@ -29,14 +38,21 @@ def generate_entities(plan, llm_client, entity_prompt, entity_config):
             else:
                 responses.append((description.rstrip(), False))
         return responses
+
+    # Get the config and prompts for entity name and description
     name_config, description_config = entity_config['name'], entity_config['description']
     name_prompt, description_prompt = entity_prompt['name'], entity_prompt['description']
+
+    # Initialize the entity list for the object
     plan.entity_list = EntityList()
+
+    # Add Entity class into the plan objects
     has_next = True
     while has_next:
+        # Generate entity name string
         entity_name = llm_client.call_with_retry(
             name_prompt.format(
-                title=plan.premise.title, 
+                title=plan.premise.title,
                 premise=plan.premise.premise,
                 setting=plan.setting.setting,
                 previous_entities=plan.entity_list.print_with_full_names(),
@@ -47,9 +63,11 @@ def generate_entities(plan, llm_client, entity_prompt, entity_config):
             filter=word_filter([entity.name for entity in plan.entity_list] + ['full', 'Full', 'name', 'Name']) + \
                     min_max_tokens_filter(0, name_config['max_tokens'])
         )[0]
+
+        # Generate the description name string
         entity_description, has_next = llm_client.call_with_retry(
             description_prompt.format(
-                title=plan.premise.title, 
+                title=plan.premise.title,
                 premise=plan.premise.premise,
                 setting=plan.setting.setting,
                 previous_entities=str(plan.entity_list),
@@ -62,11 +80,16 @@ def generate_entities(plan, llm_client, entity_prompt, entity_config):
                     min_max_tokens_filter(0, description_config['max_tokens']) + \
                     Filter(lambda s: s.endswith('.')))
         )[0]
+
+        # Append the entity in the entity list
         plan.entity_list.entities.append(Entity(entity_name, entity_description))
+
+        # Check if continuing to generate
         if len(plan.entity_list) < entity_config['min_entities']:
             has_next = True
         elif len(plan.entity_list) >= entity_config['max_entities']:
             has_next = False
+
     return plan
 
 
@@ -99,7 +122,7 @@ def generate_node_subevents(node, llm_client, outline_prompt, outline_config, pl
             event = event.split('\n')[0].rstrip().split('(')[0].rstrip()
             event = event.split('Scene:')[0].rstrip()
             event = event.split('Characters:')[0].rstrip()
-            
+
             event = event.lstrip()
             if len(event) > 0:
                 if event[-1] not in ['.', '?', '!']:
@@ -147,15 +170,15 @@ def generate_node_subevents(node, llm_client, outline_prompt, outline_config, pl
         )[0]
         new_child.text = event
         generate_node_scene(
-            new_child, 
-            llm_client, 
-            outline_prompt['scene'], 
-            outline_config['scene'], 
+            new_child,
+            llm_client,
+            outline_prompt['scene'],
+            outline_config['scene'],
             plan
         )
         generate_node_entities(
-            new_child, 
-            llm_client, 
+            new_child,
+            llm_client,
             outline_prompt['entity_depth_0'] if node.depth() == 0 else outline_prompt['entity'],
             outline_config['entity_depth_0'] if node.depth() == 0 else outline_config['entity'],
             plan
