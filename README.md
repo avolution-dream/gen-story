@@ -1,6 +1,6 @@
-# DOC Story Generation V2
+# Auto Storyboard Generation
 
-This codebase is largely adapted from Meta's [DOC Story Generation V2](https://github.com/facebookresearch/doc-storygen-v2/tree/main/storygen).
+**This codebase is adapted from Meta's [DOC Story Generation V2](https://github.com/facebookresearch/doc-storygen-v2/tree/main/storygen).**
 
 The high-level purpose is to generate stories in a hierarchical way to maintain story coherence. Simply put, we first generate a high-level plan consists of four nodes (*e.g.*, intro, development, turn, conclusion), then expanding at each node with plots.
 
@@ -20,9 +20,12 @@ pip install -e .
 You'll need to make a one-line change to the VLLM package to get their API server to work with logprobs requests that are used for reranking.
 In your install of VLLM (you can find it using e.g., `pip show vllm`), find the line at https://github.com/vllm-project/vllm/blob/acbed3ef40f015fcf64460e629813922fab90380/vllm/entrypoints/openai/api_server.py#L177 (your exact line number might vary slightly depending on VLLM version) and change the `p` at the end to e.g., `max(p, -1e8)`. This will avoid an error related to passing jsons back from the server, due to json not handling inf values. -->
 
-## Getting Started
+## Running the Pipeline
 
-We divide the story generation procedure into 3 steps, Premise, Plan, and Story. Everything will be run from the `scripts` directory:
+### Getting Started
+We divide the storyboard generation procedure into 3 steps: Premise, Plan (with expansions), and Storyboard.
+
+Everything will be run from the `scripts` directory:
 
 ```bash
 cd scripts
@@ -35,19 +38,34 @@ See the corresponding `config.yaml` for details on options for each step of the 
 By default we use VLLM to serve models. Start the server(s) for the models you're using (this will start them in the background).
 
 ```bash
-python start_servers.py --step {premise/plan}
+python start_servers.py --step premise &
+python start_servers.py --step plan &
 ```
 
-Then run the generation pipeline.
-
+### Get the Premise
+This part is to generate the title and a premise for the given title. If you would like the model to take over the job:
 ```bash
-python {premise/plan}/generate.py
+python premise/generate.py
 ```
 
-By default, files are written to the `output/` folder. Premise and Plan are formatted as jsons which can be edited for human interaction.
+You may specify the titles and premise string by yourself with the following command:
+```bash
+python premise/generate.py --user_gen \
+    --title_str 'A Happy Day'
+    --premise_str 'A pleasure-seeking, work-eschewing twenty-something realizes he has worked no days during the first few months of the pandemic despite loving his employment after receiving pandemic package payment fortnightly.'
+```
+
+By default, files are written to the `./script/output/` folder. Premise and Plan are formatted as jsons which can be edited for human interaction.
 
 After you're done with a given step, close your servers (this command also runs in the background).
 
+### Get the Plan and Storyboard
+```bash
+python plan/generate.py
+```
+TODO.
+
+### Close the Server
 ```bash
 python close_servers.py
 ```
