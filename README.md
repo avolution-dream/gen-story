@@ -57,7 +57,7 @@ python premise/generate.py --user_gen \
 
 By default, files are written to the `./script/output/` folder. Premise and Plan are formatted as jsons which can be edited for human interaction.
 
-### Get the Plan and Storyboard
+### Get the Plan
 If you would like the model to take over the job:
 ```bash
 python plan/generate.py
@@ -74,7 +74,10 @@ python plan/generate.py --user_gen \
     -char_desc "Liang is Huo's friendly colleague at the office job."
 ```
 
-TODO.
+### Get the Storyboard
+This part is simply a prompt refiner. We extract information (characters and plot texts) from the generated plan, and add additional text-to-image prompt information (style, camera shot) as well as text-to-video information (character movement and camera movement) as the prompts.
+
+
 
 ### Close the Server
 After you're done with the above, close your servers (this command also runs in the background).

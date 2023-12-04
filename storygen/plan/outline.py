@@ -25,7 +25,7 @@ class OutlineNode(Sequence):
             return num_to_char
         elif depth % 3 == 0:
             return num_to_roman
-    
+
     @staticmethod
     def indent(depth):
         if depth == 0:
@@ -40,13 +40,13 @@ class OutlineNode(Sequence):
         self.parent = parent
         self.id = str(uuid.uuid4()) if id is None else id
         super().__init__()
-    
+
     def __hash__(self):
         return hash(self.id)
 
     def __eq__(self, other):
         return self.id == other.id
-    
+
     def to_dict(self):
         return {
             'text': self.text,
@@ -55,22 +55,22 @@ class OutlineNode(Sequence):
             'children': [child.to_dict() for child in self.children],
             'id': self.id
         }
-    
+
     def format_self(self):
         s = self.number() + self.text
         if len(self.scene) > 0:
-            s += ' Scene: ' + self.scene 
+            s += ' Scene: ' + self.scene
         if len(self.entities) > 0:
             s += ' Characters: ' + ', '.join(self.entities)
         return s
-    
+
     def __str__(self, include_self=True):
         ordered_nodes = [node for node in self.depth_first_traverse(include_self=include_self)]
         return '\n\n'.join([node.format_self() for node in ordered_nodes]).strip()
-    
+
     def __len__(self):
         return len(self.children)
-    
+
     def __getitem__(self, index):
         return self.children[index]
 
@@ -79,7 +79,7 @@ class OutlineNode(Sequence):
             if node.id == id:
                 return node
         return None
-        
+
     def number(self, depth_shift=0, lookforward=0, convert=True):
         if self.parent is None:
             num = 1
@@ -106,11 +106,11 @@ class OutlineNode(Sequence):
             return self
         else:
             return self.parent.root()
-    
+
     def predecessor(self, max_depth=1e8):
         nodes = list(self.root().depth_first_traverse(max_depth=max_depth))
         return nodes[nodes.index(self)-1] if nodes.index(self) > 0 else None
-    
+
     def successor(self, max_depth=1e8):
         nodes = list(self.root().depth_first_traverse(max_depth=max_depth))
         return nodes[nodes.index(self)+1] if nodes.index(self) < len(nodes)-1 else None
@@ -120,25 +120,25 @@ class OutlineNode(Sequence):
             return [self] if include_self else []
         else:
             return self.parent.ancestors(include_self=True) + ([self] if include_self else [])
-    
+
     def siblings(self, include_self=False):
         if self.parent is None:
             return []
         else:
             return [child for child in self.parent.children if (include_self or child != self)]
-    
+
     def leaves(self):
         if len(self.children) == 0:
             return [self]
         else:
             return sum([child.leaves() for child in self.children], [])
-    
+
     def depth_first_traverse(self, include_self=True, max_depth=1e8):
         if self.depth() <= max_depth and include_self:
             yield self
         for child in self.children:
             yield from child.depth_first_traverse(max_depth=max_depth)
-    
+
     def breadth_first_traverse(self, include_self=True, max_depth=1e8):
         if self.depth() <= max_depth and include_self:
             yield self
@@ -149,30 +149,39 @@ class OutlineNode(Sequence):
                 if queue[0].depth() < max_depth:
                     queue += [c for c in queue[0].children]
                 queue = queue[1:]
-    
+
     def context(self, context_type):
         if context_type == 'full':
             selected_nodes = set(list(self.root().depth_first_traverse(include_self=False)))
+
         elif context_type == 'ancestors':
             selected_nodes = set(list(self.ancestors(include_self=False)))
+
         elif context_type == 'ancestors-with-siblings':
             ancestors = list(self.ancestors(include_self=True))
             selected_nodes = set(sum([ancestor.siblings(include_self=True) for ancestor in ancestors], []))
+
         elif context_type == 'ancestors-with-siblings-children':
             ancestors = list(self.ancestors(include_self=True))
             ancestors_with_siblings = sum([ancestor.siblings(include_self=True) for ancestor in ancestors], [])
             selected_nodes = set(ancestors_with_siblings + sum([node.children for node in ancestors_with_siblings], []))
+
         else:
             raise NotImplementedError(f"Outline expansion context type {context_type} not implemented.")
+
         prefix_nodes = []
         suffix_nodes = []
         in_prefix = True
+
         for node in self.root().depth_first_traverse(include_self=False):
+
             if node == self:
                 in_prefix = False
+
             elif node in selected_nodes:
                 if in_prefix:
                     prefix_nodes.append(node)
                 else:
                     suffix_nodes.append(node)
+
         return '\n\n'.join([node.format_self() for node in prefix_nodes]), '\n\n'.join([node.format_self() for node in suffix_nodes])
