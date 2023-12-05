@@ -1,4 +1,9 @@
 # ######################
+DEFAULT:
+# ######################
+    logging_level: info
+
+# ######################
 PATH:
 # ######################
      premise_path: 'output/premise.json'

@@ -58,18 +58,20 @@ python premise/generate.py --user_gen \
 By default, files are written to the `./script/output/` folder. Premise and Plan are formatted as jsons which can be edited for human interaction.
 
 ### 2. Get the Plan
-If you would like the model to take over the job:
+If you would like the model to take over the job (*i.e.*, the `surprise me!` button):
 ```bash
 python plan/generate.py
 ```
-You may specify the setting by yourself:
+Alternatively, the user can specify the settings and characters by themselves:
 ```bash
+# The user can specify one setting string
+# And as many as characters (with char_name and char_desc) as they want
 python plan/generate.py --user_gen \
-    --setting_str 'The story is set in 80s China where everyone has a hope.' \
-    -char_name 'Huo' \
-    -char_desc 'Huo is a worker.' \
-    -char_name 'Boss Zhang' \
-    -char_desc "Boss Zhang is the all-too-serious boss of Huo's office job. He's always yelling at Huo, whose work ethic he disapproves of." \
+    --setting_str 'The story is set in 80s Iceland.' \
+    -char_name 'Einar' \
+    -char_desc 'Einar is a worker.' \
+    -char_name 'Boss Helga' \
+    -char_desc "Boss Helga is the all-too-serious boss of Huo's office job. He's always yelling at Huo, whose work ethic he disapproves of." \
     -char_name 'Liang' \
     -char_desc "Liang is Huo's friendly colleague at the office job."
 ```

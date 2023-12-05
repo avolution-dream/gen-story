@@ -1,18 +1,12 @@
 import os
-import io
 import json
 import yaml
 import time
+import logging
 import argparse
 import Levenshtein
 
-from langchain.llms import OpenAI
-from langchain.schema import HumanMessage
-from langchain.prompts import PromptTemplate
 from langchain.chat_models import ChatOpenAI
-from langchain.document_loaders import TextLoader
-from langchain.chains.summarize import load_summarize_chain
-from langchain.text_splitter import RecursiveCharacterTextSplitter
 from concurrent.futures import ThreadPoolExecutor
 from multiprocessing import Pool
 from pathlib import Path
@@ -20,6 +14,7 @@ from pathlib import Path
 from storygen.premise.premise import Premise
 from storygen.plan.plan import Plan
 from storygen.plan.entity import Entity, EntityList
+from storygen.common.util import init_logging
 
 
 # #########################
@@ -29,7 +24,7 @@ parser = argparse.ArgumentParser()
 
 # Arguments
 parser.add_argument('-mn', '--model_name', type=str,
-                    default='gpt-3.5-turbo')
+                    default='meta-llama/Llama-2-13b-chat-hf')
 
 
 
@@ -344,6 +339,8 @@ if __name__=='__main__':
     premise_path = parent_dir / config['PATH']['premise_path']
     storyboard_path = parent_dir / config['PATH']['storyboard_path']
 
+    # Get logger
+    init_logging(config['DEFAULT']['logging_level'])
 
     # ===============================
     # Step 0 - Server
@@ -370,7 +367,7 @@ if __name__=='__main__':
 
 
     # Step 2 - Generate the style prompt
-    print('Generating the style keywords.')
+    logging.info('Generating the style keywords.')
     style_keywords = create_style(plan.premise.title,
                                   plan.premise.premise,
                                   chat_model,
@@ -383,7 +380,7 @@ if __name__=='__main__':
     # Update the visual description to each entity
     # Each item in entity list is an Entity object
     # which contains attribute of name, description, and visual
-    print('Generating the character prompts.')
+    logging.info('Generating the character prompts.')
     plan.entity_list = VisualEntityList(
         create_visual_entity_list(plan.entity_list, prompts['visual'])
     )
@@ -421,14 +418,14 @@ if __name__=='__main__':
     # Step 5 - Generate the text-to-video prompt
     # ============================================
     # Get the t2v prompt list
-    print('Generating the t2v prompts.')
+    logging.info('Generating the t2v prompts.')
     t2v_prompt_list = create_t2v_prompt_list(t2i_prompt_list, prompts['t2v_instruction'])
 
     # Update the t2v_prompt to the plots object with style and character visual
     for i, t2v_prompt in enumerate(t2v_prompt_list):
         plots[i].t2v_prompt = t2v_prompt
-        plots[i].t2v_prompt += '\n' + plots[i].entity_meta
-        plots[i].t2v_prompt += '\n' + style_keywords
+        plots[i].t2v_prompt += ' ' + plots[i].entity_meta
+        plots[i].t2v_prompt += ' ' + style_keywords
 
     # The following is repeated as the previous one is for saving intermediate steps
     # Convert the list into a dictionary with indices as keys
@@ -438,4 +435,4 @@ if __name__=='__main__':
     with open(storyboard_path, 'w+') as file:
         json.dump(indexed_plot_dict, file, indent=4)
 
-    print(f'Done! We use {time.time() - start_time} seconds to execute.')
+    logging.info(f'Done! We use {time.time() - start_time} seconds to execute.')
