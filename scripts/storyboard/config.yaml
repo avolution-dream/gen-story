@@ -13,7 +13,7 @@ MODEL:
     'HuggingFaceH4/zephyr-7b-alpha':
         model_name: 'HuggingFaceH4/zephyr-7b-alpha'
         openai_api_key: 'EMPTY'
-        openai_api_base: 'http://localhost:8000/v1'
+        openai_api_base: 'http://localhost:9741/v1'
         max_tokens: 2048
         temperature: 0.2
         model_kwargs:
@@ -27,14 +27,14 @@ MODEL:
     'lmsys/vicuna-13b-v1.5-16k':
         model_name: 'lmsys/vicuna-13b-v1.5-16k'
         openai_api_key: 'EMPTY'
-        openai_api_base: 'http://localhost:8000/v1'
+        openai_api_base: 'http://localhost:9741/v1'
         max_tokens: 1024
         temperature: 0.2
 
     'lmsys/vicuna-7b-v1.5-16k':
         model_name: 'lmsys/vicuna-7b-v1.5-16k'
         openai_api_key: 'EMPTY'
-        openai_api_base: 'http://localhost:8000/v1'
+        openai_api_base: 'http://localhost:9741/v1'
         max_tokens: 1024
         temperature: 0.2
 
@@ -48,21 +48,21 @@ MODEL:
     'meta-llama/Llama-2-7b-chat-hf':
         model_name: 'meta-llama/Llama-2-7b-chat-hf'
         openai_api_key: 'EMPTY'
-        openai_api_base: 'http://localhost:8000/v1'
+        openai_api_base: 'http://localhost:9741/v1'
         max_tokens: 1024
         temperature: 0.2
 
     'meta-llama/Llama-2-13b-chat-hf':
         model_name: 'meta-llama/Llama-2-13b-chat-hf'
         openai_api_key: 'EMPTY'
-        openai_api_base: 'http://localhost:8000/v1'
+        openai_api_base: 'http://localhost:9741/v1'
         max_tokens: 1024
         temperature: 0.2
 
     'meta-llama/Llama-2-70b-chat-hf':
         model_name: 'meta-llama/Llama-2-70b-chat-hf'
         openai_api_key: 'EMPTY'
-        openai_api_base: 'http://localhost:8000/v1'
+        openai_api_base: 'http://localhost:9741/v1'
         max_tokens: 1024
         temperature: 0.2
 
@@ -72,7 +72,7 @@ MODEL:
     'mosaicml/mpt-7b-8k-chat':
         model_name: 'mosaicml/mpt-7b-8k-chat'
         openai_api_key: 'EMPTY'
-        openai_api_base: 'http://localhost:8000/v1'
+        openai_api_base: 'http://localhost:9741/v1'
         max_tokens: 1024
         temperature: 0.2
         model_kwargs:
