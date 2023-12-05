@@ -1,4 +1,11 @@
 # ######################
+PATH:
+# ######################
+     premise_path: 'output/premise.json'
+     plan_path: 'output/plan.json'
+     output_path: 'output/storyboard.json'
+
+# ######################
 SERVER:
 # ######################
     host: 'http://localhost'

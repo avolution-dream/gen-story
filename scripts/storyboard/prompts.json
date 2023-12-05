@@ -1,0 +1,5 @@
+{
+    "style": "Based on the following story title and premise, generate a few keywords on artistic and genre styles and themes to help guide the filmaking of the story. \n\tTitle: {title} \n\tPremise: {premise} \n Be concise and limit your response in a single line with at most 5 words. An example response: Anime, sci-fi, dreamy. YOUR RESPONSE: ",
+
+    "visual": "Here is an entity descrition: {description}. Generate a visual description for the entity which can be used as an text-to-image prompt for the entity. Be concise and limit your response in 2 or 3 sentences. YOUR RESPONSE: ",
+}
