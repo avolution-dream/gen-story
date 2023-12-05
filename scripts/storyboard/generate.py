@@ -225,6 +225,44 @@ def update_entity_meta(plots, plan):
     return plots
 
 
+# ====================================
+# T2I Related Function
+# ====================================
+def create_t2i_prompt(plot, t2i_instruction: str):
+    """
+    Generate t2i_prompt string.
+
+    entity: __main__.Plot
+    t2i_instruction: str
+
+    Notice that chat_model is a global instance for threadpooling.
+    """
+
+    t2i_prompt = chat_model.predict(
+        t2i_instruction.format(text=plot.text)).strip()
+
+    return t2i_prompt
+
+
+def create_t2i_prompt_list(plots, t2i_instruction: str):
+    """
+    Parallel call LLM to generate t2i_prompts.
+
+    Notice that chat_model is a global instance for threadpooling.
+    """
+
+    # Parallel call LLM to add visual description
+    with ThreadPoolExecutor(max_workers=6) as executor:
+        futures = [executor.submit(lambda p: create_t2i_prompt(p, t2i_instruction),
+                                   plot)
+                   for plot in plots]
+
+        # Get the t2i_prompt list
+        t2i_prompt_list = [future.result() for future in futures]
+
+    return t2i_prompt_list
+
+
 # #########################
 # Main
 # #########################
@@ -293,3 +331,19 @@ plots = get_plots(plan.outline)
 
 # # Update the entity visual prompts for each plots
 plots = update_entity_meta(plots, plan)
+
+# Get the t2i prompt list
+t2i_prompt_list = create_t2i_prompt_list(plots, prompts['t2i_instruction'])
+
+# Update the t2i_prompt to the plots object with style and character visual
+for i, t2i_prompt in enumerate(t2i_prompt_list):
+    plots[i].t2i_prompt = t2i_prompt
+    plots[i].t2i_prompt += ' ' + plots[i].entity_meta
+    plots[i].t2i_prompt += ' ' + style_keywords
+
+
+# Step 5 - Generate the text-to-video prompt
+# Based on each of the t2i prompt, generate the corresponding visual effects, camero info.
+# Append to the t2i_prompts.
+# with Pool() as pool:
+#     pool.map(run, some_list)
