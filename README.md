@@ -53,7 +53,7 @@ You may specify the title and premise string by yourself with the following comm
 ```bash
 python premise/generate.py --user_gen \
     --title_str 'A Happy Day' \
-    --premise_str 'A pleasure-seeking, work-eschewing twenty-something realizes he has worked no days during the first few months of the pandemic despite loving his employment after receiving pandemic package payment fortnightly.'
+    --premise_str 'A pleasure-seeking, work-eschewing twenty-something realizes he has worked no days during the last five years.'
 ```
 
 By default, files are written to the `./script/output/` folder. Premise and Plan are formatted as jsons which can be edited for human interaction.

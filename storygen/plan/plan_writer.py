@@ -26,10 +26,8 @@ def generate_entities(plan, llm_client, entity_prompt, entity_config):
     """
     Instantiate the entity list attribute for the plan object.
     """
-    # Preprocess for name and description strings
     def postprocess_name(names, **kwargs):
         return [name.strip(string.whitespace + string.punctuation) for name in names]
-
     def postprocess_entity_description(descriptions, **kwargs):
         responses = []
         for description in descriptions:
@@ -38,18 +36,11 @@ def generate_entities(plan, llm_client, entity_prompt, entity_config):
             else:
                 responses.append((description.rstrip(), False))
         return responses
-
-    # Get the config and prompts for entity name and description
     name_config, description_config = entity_config['name'], entity_config['description']
     name_prompt, description_prompt = entity_prompt['name'], entity_prompt['description']
-
-    # Initialize the entity list for the object
     plan.entity_list = EntityList()
-
-    # Add Entity class into the plan objects
     has_next = True
     while has_next:
-        # Generate entity name string
         entity_name = llm_client.call_with_retry(
             name_prompt.format(
                 title=plan.premise.title,
@@ -63,8 +54,6 @@ def generate_entities(plan, llm_client, entity_prompt, entity_config):
             filter=word_filter([entity.name for entity in plan.entity_list] + ['full', 'Full', 'name', 'Name']) + \
                     min_max_tokens_filter(0, name_config['max_tokens'])
         )[0]
-
-        # Generate the description name string
         entity_description, has_next = llm_client.call_with_retry(
             description_prompt.format(
                 title=plan.premise.title,
@@ -80,16 +69,11 @@ def generate_entities(plan, llm_client, entity_prompt, entity_config):
                     min_max_tokens_filter(0, description_config['max_tokens']) + \
                     Filter(lambda s: s.endswith('.')))
         )[0]
-
-        # Append the entity in the entity list
         plan.entity_list.entities.append(Entity(entity_name, entity_description))
-
-        # Check if continuing to generate
         if len(plan.entity_list) < entity_config['min_entities']:
             has_next = True
         elif len(plan.entity_list) >= entity_config['max_entities']:
             has_next = False
-
     return plan
 
 
@@ -97,26 +81,14 @@ def generate_outline(plan, llm_client, outline_prompt, outline_config):
     """
     Generate the outline for the plan object
     """
-    # Initialize the OutlineNode; containing text/scene/entities/id.
     plan.outline = OutlineNode('', None)
-
     while True:
-        # Select the node to expand
         try:
-            node_to_expand = select_node_to_expand(plan.outline,
-                                                   outline_config)
+            node_to_expand = select_node_to_expand(plan.outline, outline_config)
         except StopIteration:
             break
-
-        # Generate the sub-event under the designated node
-        generate_node_subevents(node_to_expand,
-                                llm_client,
-                                outline_prompt,
-                                outline_config,
-                                plan)
-
+        generate_node_subevents(node_to_expand, llm_client, outline_prompt, outline_config, plan)
         logging.debug(plan.outline)
-
     return plan
 
 
@@ -125,9 +97,6 @@ def generate_node_subevents(node, llm_client, outline_prompt, outline_config, pl
     Generate the sub-event under the designated node.
     """
     def event_postprocessor(events, has_next_indicator, current_number, **kwargs):
-        """
-        Formating the text.
-        """
         responses = []
         for event in events:
             while '\n ' in event:
@@ -137,30 +106,24 @@ def generate_node_subevents(node, llm_client, outline_prompt, outline_config, pl
             has_next = has_next_indicator in event
             # logging.debug('has next: ' + has_next_indicator + ' ' + str(has_next) + ' ' + event)
             event = event.split(has_next_indicator)[0].rstrip()
-
             if event.lstrip().startswith('[') and ']' in event:
                 event = event.split(']')[1].lstrip()
-
             event = event.lstrip().lstrip(':').lstrip()
             event = event.split('\n')[0].rstrip().split('(')[0].rstrip()
             event = event.split('Scene:')[0].rstrip()
             event = event.split('Characters:')[0].rstrip()
-            event = event.lstrip
 
+            event = event.lstrip()
             if len(event) > 0:
                 if event[-1] not in ['.', '?', '!']:
                     if event[-1] in string.punctuation:
                         event = '' # cause this to be filtered out
                     else:
                         event += '.'
-
             if len(event.split()) > 0 and current_number in event.split()[0]:
                 event = event[len(event.split()[0]):].lstrip()
-
             responses.append((event, has_next))
         return responses
-
-    # Set up the config and prompt to use
     if node.depth() == 0:
         # slightly different handling for the first expansion at depth 0
         event_config = outline_config['event_depth_0']
@@ -168,7 +131,6 @@ def generate_node_subevents(node, llm_client, outline_prompt, outline_config, pl
     else:
         event_config = outline_config['event']
         event_prompt = outline_prompt['event']
-
     has_next = True
     while has_next:
         new_child = OutlineNode('', node)
@@ -176,11 +138,8 @@ def generate_node_subevents(node, llm_client, outline_prompt, outline_config, pl
         context_prefix, context_suffix = new_child.context(outline_config['context'])
         filter = wrap_filter_for_tuple(min_max_tokens_filter(0, event_config['max_tokens']) + word_filter(['[', 'TODO', ']', ':']))
         if len(node.children) >= outline_config['max_children']:
-            filter = filter + wrap_filter_for_tuple(Filter(lambda t: not t[1]))
-            # shouldn't continue past max children, so has_next should be false
-
+            filter = filter + wrap_filter_for_tuple(Filter(lambda t: not t[1])) # shouldn't continue past max children, so has_next should be false
         filter += wrap_filter_for_tuple(levenshtein_ratio_filter([n.text for n in node.root().depth_first_traverse(include_self=False)]))
-
         event, has_next = llm_client.call_with_retry(
             event_prompt.format(
                 title=plan.premise.title,
@@ -199,9 +158,7 @@ def generate_node_subevents(node, llm_client, outline_prompt, outline_config, pl
             postprocessor=partial(event_postprocessor, has_next_indicator='\n' + new_child.number(lookforward=1).strip(), current_number=new_child.number(lookforward=0).strip()),
             filter=filter,
         )[0]
-
         new_child.text = event
-
         generate_node_scene(
             new_child,
             llm_client,
@@ -209,7 +166,6 @@ def generate_node_subevents(node, llm_client, outline_prompt, outline_config, pl
             outline_config['scene'],
             plan
         )
-
         generate_node_entities(
             new_child,
             llm_client,
@@ -217,7 +173,6 @@ def generate_node_subevents(node, llm_client, outline_prompt, outline_config, pl
             outline_config['entity_depth_0'] if node.depth() == 0 else outline_config['entity'],
             plan
         )
-
         logging.info(f"Newly generated node: {new_child}")
         if len(node.children) < outline_config['min_children']:
             has_next = True
@@ -242,9 +197,7 @@ def generate_node_scene(node, llm_client, scene_prompt, scene_config, plan):
                 scene = scene[:scene.index('"')]
             responses.append(scene)
         return responses
-
     context_prefix, context_suffix = node.context(scene_config['context'])
-
     node.scene = llm_client.call_with_retry(
         scene_prompt.format(
             title=plan.premise.title,
