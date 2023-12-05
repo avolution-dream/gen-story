@@ -3,6 +3,7 @@ import io
 import json
 import yaml
 import argparse
+import Levenshtein
 
 from langchain.llms import OpenAI
 from langchain.schema import HumanMessage
