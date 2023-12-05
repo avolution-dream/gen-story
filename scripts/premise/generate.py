@@ -32,7 +32,7 @@ def generate_premise_user(premise_object, premise_str):
 
     premise: (str) the premise sentence(s) for the story.
     """
-    premise_object.title = premise_str
+    premise_object.premise = premise_str
     return premise_object
 
 
