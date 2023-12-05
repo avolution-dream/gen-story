@@ -2,6 +2,7 @@ import os
 import io
 import json
 import yaml
+import time
 import argparse
 import Levenshtein
 
@@ -325,6 +326,9 @@ p = parser.parse_args()
 for key, value in vars(p).items():
     globals()[key] = value
 
+# Record time
+start_time = time.time()
+
 # Set the path
 # current_dir = Path(os.getcwd())  # !!!!!!!!! Different from jupyter notebook
 current_dir = Path(os.path.dirname(os.path.realpath(__file__)))
@@ -432,4 +436,4 @@ indexed_plot_dict = {str(i): d.to_dict() for i, d in enumerate(plots)}
 with open(storyboard_path, 'w+') as file:
     json.dump(indexed_plot_dict, file, indent=4)
 
-print('Done!')
+print(f'Done! We use {time.time() - start_time} seconds to execute.')
