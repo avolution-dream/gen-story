@@ -41,6 +41,8 @@ if 'gpt' not in model_name:
 
 # Load the chat model with openai format
 chat_model = ChatOpenAI(**model_config[model_name])
+test_ = chat_model.predict('test')
+print(test_)
 
 
 # We initiate a langchain chat object by reusing the server from plan.
