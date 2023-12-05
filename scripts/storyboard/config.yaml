@@ -15,7 +15,7 @@ SERVER:
 # ######################
     host: 'http://localhost'
     port: 9741
-    tensor_parallel_size: 4
+    tensor_parallel_size: 8
 
 # ######################
 MODEL:
