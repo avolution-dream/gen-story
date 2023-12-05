@@ -346,11 +346,12 @@ if __name__=='__main__':
     # Step 0 - Server
     # ===============================
     # Starting the server for open-source model
-    if 'gpt' not in model_name:
-        os.system(f"python -u -m vllm.entrypoints.openai.api_server \
-                    --model {model_name} \
-                    --tensor-parallel-size {config['SERVER']['tensor_parallel_size']} \
-                    --port {config['SERVER']['port']} &")
+    # Reusing the server is a better practice – to update this part later.
+    # if 'gpt' not in model_name:
+    #     os.system(f"python -u -m vllm.entrypoints.openai.api_server \
+    #                 --model {model_name} \
+    #                 --tensor-parallel-size {config['SERVER']['tensor_parallel_size']} \
+    #                 --port {config['SERVER']['port']} &")
 
     # Load the chat model with openai format
     chat_model = ChatOpenAI(**config['MODEL'][model_name])
