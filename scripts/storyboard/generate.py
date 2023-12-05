@@ -242,6 +242,8 @@ def update_entity_meta(plots, plan):
 # ====================================
 # T2I Related Function
 # ====================================
+# We just provided redundant functions
+# In future updates we should merge them together
 def create_t2i_prompt(plot, t2i_instruction: str):
     """
     Generate t2i_prompt string.
@@ -275,6 +277,40 @@ def create_t2i_prompt_list(plots, t2i_instruction: str):
         t2i_prompt_list = [future.result() for future in futures]
 
     return t2i_prompt_list
+
+
+def create_t2v_prompt(text, t2v_instruction: str):
+    """
+    Generate t2v_prompt string.
+
+    t2v_instruction: str
+
+    Notice that chat_model is a global instance for threadpooling.
+    """
+
+    t2v_prompt = chat_model.predict(
+        t2v_instruction.format(t2i_prompt=text)).strip()
+
+    return t2v_prompt
+
+
+def create_t2v_prompt_list(text_list, t2v_instruction: str):
+    """
+    Parallel call LLM to generate t2v_prompts.
+
+    Notice that chat_model is a global instance for threadpooling.
+    """
+
+    # Parallel call LLM to add visual description
+    with ThreadPoolExecutor(max_workers=6) as executor:
+        futures = [executor.submit(lambda t: create_t2v_prompt(t, t2v_instruction),
+                                   text)
+                   for text in text_list]
+
+        # Get the t2i_prompt list
+        t2v_prompt_list = [future.result() for future in futures]
+
+    return t2v_prompt_list
 
 
 # #########################
@@ -373,3 +409,26 @@ indexed_plot_dict = {str(i): d.to_dict() for i, d in enumerate(plots)}
 # Save to a JSON file
 with open(storyboard_path, 'w+') as file:
     json.dump(indexed_plot_dict, file, indent=4)
+
+
+# ============================================
+# Step 5 - Generate the text-to-video prompt
+# ============================================
+# Get the t2v prompt list
+t2v_prompt_list = create_t2v_prompt_list(t2i_prompt_list, prompts['t2v_instruction'])
+
+# Update the t2v_prompt to the plots object with style and character visual
+for i, t2v_prompt in enumerate(t2v_prompt_list):
+    plots[i].t2v_prompt = t2v_prompt
+    plots[i].t2v_prompt += '\n' + plots[i].entity_meta
+    plots[i].t2v_prompt += '\n' + style_keywords
+
+# The following is repeated as the previous one is for saving intermediate steps
+# Convert the list into a dictionary with indices as keys
+indexed_plot_dict = {str(i): d.to_dict() for i, d in enumerate(plots)}
+
+# Save to a JSON file
+with open(storyboard_path, 'w+') as file:
+    json.dump(indexed_plot_dict, file, indent=4)
+
+print('Done!')

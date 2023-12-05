@@ -22,7 +22,7 @@ In your install of VLLM (you can find it using e.g., `pip show vllm`), find the 
 
 ## Running the Pipeline
 
-### Getting Started
+### 0. Getting Started
 We divide the storyboard generation procedure into 3 steps: Premise, Plan (with expansions), and Storyboard.
 
 Everything will be run from the `scripts` directory:
@@ -33,7 +33,7 @@ cd scripts
 
 Everything will read the information from the `defaults` configuration in `config.yaml` unless specified otherwise using the `--configs` flag.
 
-See the corresponding `config.yaml` for details on options for each step of the pipeline. You'll have to fill in the particular model you want to use (marked TODO in each `config.yaml`). This system was mainly tested with LLaMA2-7B-Chat and ChatGPT, with the default options given; several other options are supported but not as heavily tested. When changing the model, make sure you also change `server_type` and `prompt_format` as needed. You can also add new options directly to the config as needed; you can also see the main prompts in `prompts.json`.
+Currently, the system was mainly tested with LLaMA2-7B-Chat and ChatGPT, with the default options given; several other options are supported but not as heavily tested. When changing the model, the `server_type` and `prompt_format` may also be changed as needed.
 
 By default we use VLLM to serve models. Start the server(s) for the models you're using (this will start them in the background).
 
@@ -42,7 +42,7 @@ python start_servers.py --step premise &
 python start_servers.py --step plan &
 ```
 
-### Get the Premise
+### 1. Get the Premise
 This part is to generate the title and a premise for the given title. If you would like the model to take over the job:
 ```bash
 python premise/generate.py
@@ -57,7 +57,7 @@ python premise/generate.py --user_gen \
 
 By default, files are written to the `./script/output/` folder. Premise and Plan are formatted as jsons which can be edited for human interaction.
 
-### Get the Plan
+### 2. Get the Plan
 If you would like the model to take over the job:
 ```bash
 python plan/generate.py
@@ -74,7 +74,7 @@ python plan/generate.py --user_gen \
     -char_desc "Liang is Huo's friendly colleague at the office job."
 ```
 
-### Get the Storyboard
+### 3. Get the Storyboard
 We extract information (characters and plot texts) from the generated plan, and generate additional text-to-image prompt information (style, camera shot) as well as text-to-video information (character movement and camera movement) as the prompts.
 ```bash
 python storyboard/generate.py
@@ -82,7 +82,7 @@ python storyboard/generate.py
 
 
 
-### Close the Server
+### 4. Close the Server
 After you're done with the above, close your servers (this command also runs in the background).
 
 ```bash
@@ -97,12 +97,10 @@ Note that `start_servers.py` relies on `close_servers.py` to delete the `server_
 <!-- - When start multiple model servers for different models, we should allocate them to different GPUs or load on multi-GPU as needed. -->
 - During plan generation, the model likes to overgenerate characters when determining which characters appear in a given plot point.
 - Diversity of premise / plan ideas is kind of bad when using chat models, since they like to generate the same ideas over and over. Can try to increase temperature, or other ways to increase diversity, ideally without sacrificing quality.
-- We should implement vaguest-first expansion (using a model to predict which node is the most vague) rather than breadth-first expansion when creating the outline during plan generation.
-- Some model types and some more obscure options in the code aren't well-tested. Please let us know if you run into any issues.
 
 
 ## License
-This repo is licensed under the Apache 2.0 License.
+This repo is licensed under the Apache 2.0 License and adapted from Facebook research's DOC2 implementation.
 
 ## TODO
 - [x] Intead of automating the whole process, allow user to:
@@ -111,3 +109,5 @@ This repo is licensed under the Apache 2.0 License.
     - Provide characters and their descriptions
 - [x] Adding text-to-image/video prompt in each generated plots
 - [ ] Add the gradio interface for this one
+- [ ] Implement vaguest-first expansion instead of breadth-first expansion
+- [ ] Adding critiques in the generation process
