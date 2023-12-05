@@ -75,7 +75,10 @@ python plan/generate.py --user_gen \
 ```
 
 ### Get the Storyboard
-This part is simply a prompt refiner. We extract information (characters and plot texts) from the generated plan, and add additional text-to-image prompt information (style, camera shot) as well as text-to-video information (character movement and camera movement) as the prompts.
+We extract information (characters and plot texts) from the generated plan, and generate additional text-to-image prompt information (style, camera shot) as well as text-to-video information (character movement and camera movement) as the prompts.
+```bash
+python storyboard/generate.py
+```
 
 
 
@@ -106,5 +109,5 @@ This repo is licensed under the Apache 2.0 License.
     - Provide title
     - Provide premise
     - Provide characters and their descriptions
-- [ ] Adding text-to-image prompt in each generated plots
+- [x] Adding text-to-image/video prompt in each generated plots
 - [ ] Add the gradio interface for this one
