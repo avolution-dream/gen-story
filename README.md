@@ -41,6 +41,7 @@ By default we use VLLM to serve models. Start the server(s) for the models you'r
 python start_servers.py --step premise &
 python start_servers.py --step plan &
 ```
+Wait until the server is ready. (It's ready when it says `Uvicorn running`.)
 
 ### 1. Get the Premise
 This part is to generate the title and a premise for the given title. If you would like the model to take over the job:

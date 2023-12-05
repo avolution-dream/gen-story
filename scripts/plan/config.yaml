@@ -8,7 +8,7 @@ defaults:
   output_path: output/plan.json
   logging_level: info # debug, info, warning, error, critical
   MODEL:
-    engine: meta-llama/Llama-2-70b-chat-hf # TODO path/to/vllm-supported/hf/model, vllm-supported huggingface model string, or openai model string
+    engine: meta-llama/Llama-2-13b-chat-hf # TODO path/to/vllm-supported/hf/model, vllm-supported huggingface model string, or openai model string
     tensor_parallel_size: 8 # TODO
     server_type: vllm # "vllm" or "openai"
     host: http://localhost # model server if using vllm
