@@ -270,7 +270,7 @@ def create_t2i_prompt_list(plots, t2i_instruction: str):
     """
 
     # Parallel call LLM to add visual description
-    with ThreadPoolExecutor(max_workers=6) as executor:
+    with ThreadPoolExecutor(max_workers=10) as executor:
         futures = [executor.submit(lambda p: create_t2i_prompt(p, t2i_instruction),
                                    plot)
                    for plot in plots]
@@ -304,7 +304,7 @@ def create_t2v_prompt_list(text_list, t2v_instruction: str):
     """
 
     # Parallel call LLM to add visual description
-    with ThreadPoolExecutor(max_workers=6) as executor:
+    with ThreadPoolExecutor(max_workers=10) as executor:
         futures = [executor.submit(lambda t: create_t2v_prompt(t, t2v_instruction),
                                    text)
                    for text in text_list]
@@ -315,125 +315,127 @@ def create_t2v_prompt_list(text_list, t2v_instruction: str):
     return t2v_prompt_list
 
 
-# #########################
-# Main
-# #########################
-# Parse the arguments
-# p = parser.parse_args('') # !!!!!! Different from jupyter notebook
-p = parser.parse_args()
+if __name__=='__main__':
+    # #########################
+    # Main
+    # #########################
+    # Parse the arguments
+    # p = parser.parse_args('') # !!!!!! Different from jupyter notebook
+    p = parser.parse_args()
 
-# Set the argument
-for key, value in vars(p).items():
-    globals()[key] = value
+    # Set the argument
+    for key, value in vars(p).items():
+        globals()[key] = value
 
-# Record time
-start_time = time.time()
+    # Record time
+    start_time = time.time()
 
-# Set the path
-# current_dir = Path(os.getcwd())  # !!!!!!!!! Different from jupyter notebook
-current_dir = Path(os.path.dirname(os.path.realpath(__file__)))
-parent_dir = Path(os.path.dirname(current_dir))
+    # Set the path
+    # current_dir = Path(os.getcwd())  # !!!!!!!!! Different from jupyter notebook
+    current_dir = Path(os.path.dirname(os.path.realpath(__file__)))
+    parent_dir = Path(os.path.dirname(current_dir))
 
-# Load the config and prompts
-config = yaml.safe_load(open(current_dir / 'config.yaml'))
-prompts = json.load(open(current_dir / 'prompts.json'))
+    # Load the config and prompts
+    config = yaml.safe_load(open(current_dir / 'config.yaml'))
+    prompts = json.load(open(current_dir / 'prompts.json'))
 
-# Set the path
-plan_path = parent_dir / config['PATH']['plan_path']
-premise_path = parent_dir / config['PATH']['premise_path']
-storyboard_path = parent_dir / config['PATH']['storyboard_path']
-
-
-# ===============================
-# Step 0 - Server
-# ===============================
-# Starting the server for open-source model
-if 'gpt' not in model_name:
-    os.system(f"python -u -m vllm.entrypoints.openai.api_server \
-                --model {model_name} \
-                --tensor-parallel-size {config['SERVER']['tensor_parallel_size']} \
-                --port {config['SERVER']['port']} &")
-
-# Load the chat model with openai format
-chat_model = ChatOpenAI(**config['MODEL'][model_name])
+    # Set the path
+    plan_path = parent_dir / config['PATH']['plan_path']
+    premise_path = parent_dir / config['PATH']['premise_path']
+    storyboard_path = parent_dir / config['PATH']['storyboard_path']
 
 
-# ===============================
-# Step 1 - Gather data
-# ===============================
-# Load the premise related
-premise = Premise.load(premise_path)
+    # ===============================
+    # Step 0 - Server
+    # ===============================
+    # Starting the server for open-source model
+    if 'gpt' not in model_name:
+        os.system(f"python -u -m vllm.entrypoints.openai.api_server \
+                    --model {model_name} \
+                    --tensor-parallel-size {config['SERVER']['tensor_parallel_size']} \
+                    --port {config['SERVER']['port']} &")
 
-# Load the plan related
-plan = Plan.load(plan_path)
-
-
-# Step 2 - Generate the style prompt
-print('Generating the style keywords.')
-style_keywords = create_style(plan.premise.title,
-                              plan.premise.premise,
-                              chat_model,
-                              prompts['style'])
+    # Load the chat model with openai format
+    chat_model = ChatOpenAI(**config['MODEL'][model_name])
 
 
-# =======================================
-# Step 3 - Generate the character prompt
-# =======================================
-# Update the visual description to each entity
-# Each item in entity list is an Entity object
-# which contains attribute of name, description, and visual
-print('Generating the character prompts.')
-plan.entity_list = VisualEntityList(
-    create_visual_entity_list(plan.entity_list, prompts['visual'])
-)
+    # ===============================
+    # Step 1 - Gather data
+    # ===============================
+    # Load the premise related
+    premise = Premise.load(premise_path)
+
+    # Load the plan related
+    plan = Plan.load(plan_path)
 
 
-# ============================================
-# Step 4 - Generate the text-to-image prompt
-# ============================================
-# Get all the plots from the innermost node of the plan
-plots = get_plots(plan.outline)
-
-# Update the entity visual prompts for each plots
-plots = update_entity_meta(plots, plan)
-
-# Get the t2i prompt list
-print('Generating the t2i prompts.')
-t2i_prompt_list = create_t2i_prompt_list(plots, prompts['t2i_instruction'])
-
-# Update the t2i_prompt to the plots object with style and character visual
-for i, t2i_prompt in enumerate(t2i_prompt_list):
-    plots[i].t2i_prompt = t2i_prompt
-    plots[i].t2i_prompt += ' ' + plots[i].entity_meta
-    plots[i].t2i_prompt += ' ' + style_keywords
+    # Step 2 - Generate the style prompt
+    print('Generating the style keywords.')
+    style_keywords = create_style(plan.premise.title,
+                                  plan.premise.premise,
+                                  chat_model,
+                                  prompts['style'])
 
 
-# Convert the list into a dictionary with indices as keys
-indexed_plot_dict = {str(i): d.to_dict() for i, d in enumerate(plots)}
+    # =======================================
+    # Step 3 - Generate the character prompt
+    # =======================================
+    # Update the visual description to each entity
+    # Each item in entity list is an Entity object
+    # which contains attribute of name, description, and visual
+    print('Generating the character prompts.')
+    plan.entity_list = VisualEntityList(
+        create_visual_entity_list(plan.entity_list, prompts['visual'])
+    )
 
-# Save to a JSON file
-with open(storyboard_path, 'w+') as file:
-    json.dump(indexed_plot_dict, file, indent=4)
+
+    # ============================================
+    # Step 4 - Generate the text-to-image prompt
+    # ============================================
+    # Get all the plots from the innermost node of the plan
+    plots = get_plots(plan.outline)
+
+    # Update the entity visual prompts for each plots
+    plots = update_entity_meta(plots, plan)
+
+    # Get the t2i prompt list
+    print('Generating the t2i prompts.')
+    t2i_prompt_list = create_t2i_prompt_list(plots, prompts['t2i_instruction'])
+
+    # Update the t2i_prompt to the plots object with style and character visual
+    for i, t2i_prompt in enumerate(t2i_prompt_list):
+        plots[i].t2i_prompt = t2i_prompt
+        plots[i].t2i_prompt += ' ' + plots[i].entity_meta
+        plots[i].t2i_prompt += ' ' + style_keywords
 
 
-# ============================================
-# Step 5 - Generate the text-to-video prompt
-# ============================================
-# Get the t2v prompt list
-t2v_prompt_list = create_t2v_prompt_list(t2i_prompt_list, prompts['t2v_instruction'])
+    # Convert the list into a dictionary with indices as keys
+    indexed_plot_dict = {str(i): d.to_dict() for i, d in enumerate(plots)}
 
-# Update the t2v_prompt to the plots object with style and character visual
-for i, t2v_prompt in enumerate(t2v_prompt_list):
-    plots[i].t2v_prompt = t2v_prompt
-    plots[i].t2v_prompt += '\n' + plots[i].entity_meta
-    plots[i].t2v_prompt += '\n' + style_keywords
+    # Save to a JSON file
+    with open(storyboard_path, 'w+') as file:
+        json.dump(indexed_plot_dict, file, indent=4)
 
-# The following is repeated as the previous one is for saving intermediate steps
-# Convert the list into a dictionary with indices as keys
-indexed_plot_dict = {str(i): d.to_dict() for i, d in enumerate(plots)}
 
-# Save to a JSON file
-with open(storyboard_path, 'w+') as file:
-    json.dump(indexed_plot_dict, file, indent=4)
+    # ============================================
+    # Step 5 - Generate the text-to-video prompt
+    # ============================================
+    # Get the t2v prompt list
+    print('Generating the t2v prompts.')
+    t2v_prompt_list = create_t2v_prompt_list(t2i_prompt_list, prompts['t2v_instruction'])
 
-print(f'Done! We use {time.time() - start_time} seconds to execute.')
+    # Update the t2v_prompt to the plots object with style and character visual
+    for i, t2v_prompt in enumerate(t2v_prompt_list):
+        plots[i].t2v_prompt = t2v_prompt
+        plots[i].t2v_prompt += '\n' + plots[i].entity_meta
+        plots[i].t2v_prompt += '\n' + style_keywords
+
+    # The following is repeated as the previous one is for saving intermediate steps
+    # Convert the list into a dictionary with indices as keys
+    indexed_plot_dict = {str(i): d.to_dict() for i, d in enumerate(plots)}
+
+    # Save to a JSON file
+    with open(storyboard_path, 'w+') as file:
+        json.dump(indexed_plot_dict, file, indent=4)
+
+    print(f'Done! We use {time.time() - start_time} seconds to execute.')

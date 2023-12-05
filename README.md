@@ -33,7 +33,7 @@ cd scripts
 
 Everything will read the information from the `defaults` configuration in `config.yaml` unless specified otherwise using the `--configs` flag.
 
-Currently, the system was mainly tested with LLaMA2-7B-Chat and ChatGPT, with the default options given; several other options are supported but not as heavily tested. When changing the model, the `server_type` and `prompt_format` may also be changed as needed.
+Currently, the system was mainly tested with `LLaMA2-Chat`, `vicuna`, `mpt-chat` (crappy) and ChatGPT, with the default options given; several other options are supported but not as heavily tested. When changing the model, the `server_type` and `prompt_format` may also be changed as needed.
 
 By default we use VLLM to serve models. Start the server(s) for the models you're using (this will start them in the background).
 
