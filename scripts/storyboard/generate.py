@@ -125,9 +125,23 @@ class Plot:
         self.scene = scene
         self.entities = entities
 
+        # Additinal attribute
         self.t2i_prompt = t2i_prompt
         self.t2v_prompt = t2v_prompt
         self.entity_meta = ''
+
+    def to_dict(self):
+        """
+        Return an dict object for the content.
+        """
+        return {
+            'text': self.text,
+            'scene': self.scene,
+            'entities': self.entities,
+            'entity_meta': self.entity_meta,
+            't2i_prompt': self.t2i_prompt,
+            't2v_prompt': self.t2v_prompt
+        }
 
 
 class PlotList:
@@ -267,21 +281,27 @@ def create_t2i_prompt_list(plots, t2i_instruction: str):
 # Main
 # #########################
 # Parse the arguments
-p = parser.parse_args('')
+# p = parser.parse_args('') # !!!!!! Different from jupyter notebook
+p = parser.parse_args()
 
 # Set the argument
 for key, value in vars(p).items():
     globals()[key] = value
 
 # Set the path
-current_dir = Path(os.getcwd())
+# current_dir = Path(os.getcwd())  # !!!!!!!!! Different from jupyter notebook
+current_dir = Path(os.path.dirname(os.path.realpath(__file__)))
 parent_dir = Path(os.path.dirname(current_dir))
-
-print(parent_dir)
 
 # Load the config and prompts
 config = yaml.safe_load(open(current_dir / 'config.yaml'))
 prompts = json.load(open(current_dir / 'prompts.json'))
+
+# Set the path
+plan_path = parent_dir / config['PATH']['plan_path']
+premise_path = parent_dir / config['PATH']['premise_path']
+storyboard_path = parent_dir / config['PATH']['storyboard_path']
+
 
 # ===============================
 # Step 0 - Server
@@ -301,38 +321,43 @@ chat_model = ChatOpenAI(**config['MODEL'][model_name])
 # Step 1 - Gather data
 # ===============================
 # Load the premise related
-premise = Premise.load(parent_dir / config['PATH']['premise_path'])
-title = premise.title
-premise = premise.premise
+premise = Premise.load(premise_path)
 
 # Load the plan related
-plan = Plan.load(parent_dir / config['PATH']['plan_path'])
+plan = Plan.load(plan_path)
 
 
 # Step 2 - Generate the style prompt
+print('Generating the style keywords.')
 style_keywords = create_style(plan.premise.title,
                               plan.premise.premise,
                               chat_model,
                               prompts['style'])
 
 
+# =======================================
 # Step 3 - Generate the character prompt
-# # Update the visual description to each entity
-# # Each item in entity list is an Entity object
-# # which contains attribute of name, description, and visual
+# =======================================
+# Update the visual description to each entity
+# Each item in entity list is an Entity object
+# which contains attribute of name, description, and visual
+print('Generating the character prompts.')
 plan.entity_list = VisualEntityList(
     create_visual_entity_list(plan.entity_list, prompts['visual'])
 )
 
 
+# ============================================
 # Step 4 - Generate the text-to-image prompt
-# # Get all the plots from the innermost node of the plan
+# ============================================
+# Get all the plots from the innermost node of the plan
 plots = get_plots(plan.outline)
 
-# # Update the entity visual prompts for each plots
+# Update the entity visual prompts for each plots
 plots = update_entity_meta(plots, plan)
 
 # Get the t2i prompt list
+print('Generating the t2i prompts.')
 t2i_prompt_list = create_t2i_prompt_list(plots, prompts['t2i_instruction'])
 
 # Update the t2i_prompt to the plots object with style and character visual
@@ -342,8 +367,9 @@ for i, t2i_prompt in enumerate(t2i_prompt_list):
     plots[i].t2i_prompt += ' ' + style_keywords
 
 
-# Step 5 - Generate the text-to-video prompt
-# Based on each of the t2i prompt, generate the corresponding visual effects, camero info.
-# Append to the t2i_prompts.
-# with Pool() as pool:
-#     pool.map(run, some_list)
+# Convert the list into a dictionary with indices as keys
+indexed_plot_dict = {str(i): d.to_dict() for i, d in enumerate(plots)}
+
+# Save to a JSON file
+with open(storyboard_path, 'w+') as file:
+    json.dump(indexed_plot_dict, file, indent=4)
